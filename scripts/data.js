@@ -1,0 +1,223 @@
+// ============================================================
+// ANIMEMIX — anime catalog (mock data)
+// ============================================================
+
+const ANIME = [
+  {
+    id: 'frieren',
+    title: 'Фрірен: За межею подорожі',
+    titleEn: 'Frieren: Beyond Journey\'s End',
+    titleJp: '葬送のフリーレン',
+    year: 2023, ep: 28, rating: 9.4, status: 'completed',
+    genres: ['Фентезі', 'Драма', 'Пригоди'],
+    studio: 'Madhouse',
+    age: '12+',
+    palette: ['#e8d4b8', '#b8a4d8', '#3a2e5c'],
+    accent: '#d4b8ff',
+    synopsis: 'Безсмертна ельфійка-маг Фрірен подорожує світом після перемоги над Демонічним Королем — і вчиться розуміти короткі людські життя.',
+    badges: ['hot', 'dub'],
+    runtime: '24 хв',
+    season: 'Зима 2024'
+  },
+  {
+    id: 'solo-leveling',
+    title: 'Соло-левелінг',
+    titleEn: 'Solo Leveling',
+    titleJp: '俺だけレベルアップな件',
+    year: 2024, ep: 25, rating: 9.1, status: 'airing',
+    genres: ['Екшн', 'Фентезі', 'Темне фентезі'],
+    studio: 'A-1 Pictures',
+    age: '16+',
+    palette: ['#1a0a3f', '#6b4dff', '#00f0ff'],
+    accent: '#6b4dff',
+    synopsis: 'Найслабший мисливець E-рангу отримує загадкову систему, яка дозволяє йому ставати сильнішим без меж.',
+    badges: ['hot', 'new'],
+    runtime: '24 хв',
+    season: 'Літо 2024'
+  },
+  {
+    id: 'dandadan',
+    title: 'Данданан',
+    titleEn: 'Dandadan',
+    titleJp: 'ダンダダン',
+    year: 2024, ep: 12, rating: 8.9, status: 'airing',
+    genres: ['Надприродне', 'Комедія', 'Романтика'],
+    studio: 'Science SARU',
+    age: '16+',
+    palette: ['#ff2d95', '#ffce4a', '#000000'],
+    accent: '#ff2d95',
+    synopsis: 'Дівчина, яка вірить у привидів, і хлопець, який вірить в інопланетян, доводять один одному, хто правий — і потрапляють у халепу.',
+    badges: ['hot', 'new', 'dub'],
+    runtime: '24 хв',
+    season: 'Осінь 2024'
+  },
+  {
+    id: 'jjk',
+    title: 'Магічна битва',
+    titleEn: 'Jujutsu Kaisen',
+    titleJp: '呪術廻戦',
+    year: 2023, ep: 47, rating: 8.7, status: 'airing',
+    genres: ['Екшн', 'Надприродне', 'Школа'],
+    studio: 'MAPPA',
+    age: '16+',
+    palette: ['#0a0a14', '#7928ca', '#ff007a'],
+    accent: '#7928ca',
+    synopsis: 'Юджі Ітадорі ковтає палець могутнього прокляття і опиняється у світі магічних війн.',
+    badges: ['dub'],
+    runtime: '24 хв',
+    season: 'Осінь 2023'
+  },
+  {
+    id: 'chainsaw',
+    title: 'Людина-бензопила',
+    titleEn: 'Chainsaw Man',
+    titleJp: 'チェンソーマン',
+    year: 2022, ep: 12, rating: 8.6, status: 'completed',
+    genres: ['Екшн', 'Темне фентезі', 'Жахи'],
+    studio: 'MAPPA',
+    age: '18+',
+    palette: ['#1a0000', '#ff0000', '#ffd700'],
+    accent: '#ff3344',
+    synopsis: 'Дензі зливається з демоном-бензопилою і починає полювати на демонів за гроші, любов і нормальне життя.',
+    badges: ['dub'],
+    runtime: '24 хв',
+    season: 'Осінь 2022'
+  },
+  {
+    id: 'apothecary',
+    title: 'Монологи аптекарки',
+    titleEn: 'The Apothecary Diaries',
+    titleJp: '薬屋のひとりごと',
+    year: 2024, ep: 24, rating: 9.0, status: 'airing',
+    genres: ['Містерія', 'Історичне', 'Драма'],
+    studio: 'OLM',
+    age: '12+',
+    palette: ['#2a1810', '#c97d50', '#f4d4a8'],
+    accent: '#ff8a4c',
+    synopsis: 'Молода аптекарка розгадує отрути та інтриги задньої палати імператора.',
+    badges: ['new'],
+    runtime: '24 хв',
+    season: 'Зима 2024'
+  },
+  {
+    id: 'oshi',
+    title: 'Зірка, яку люблю',
+    titleEn: 'Oshi no Ko',
+    titleJp: '推しの子',
+    year: 2024, ep: 24, rating: 8.8, status: 'airing',
+    genres: ['Драма', 'Надприродне', 'Шоу-біз'],
+    studio: 'Doga Kobo',
+    age: '16+',
+    palette: ['#100828', '#ff2d95', '#ffe066'],
+    accent: '#ff2d95',
+    synopsis: 'Лікар і його пацієнтка перевтілюються у двійнят улюбленої айдол-співачки.',
+    badges: ['new'],
+    runtime: '24 хв',
+    season: 'Літо 2024'
+  },
+  {
+    id: 'vinland',
+    title: 'Сага про Вінланд',
+    titleEn: 'Vinland Saga',
+    titleJp: 'ヴィンランド・サガ',
+    year: 2023, ep: 48, rating: 9.2, status: 'completed',
+    genres: ['Історичне', 'Драма', 'Екшн'],
+    studio: 'MAPPA',
+    age: '18+',
+    palette: ['#0a1a2a', '#4a6f8c', '#b8d4e8'],
+    accent: '#4a9fff',
+    synopsis: 'Епічна історія вікінга, який шукає сенс життя після помсти, у далеких землях Вінланду.',
+    badges: [],
+    runtime: '24 хв',
+    season: 'Зима 2023'
+  },
+  {
+    id: 'demon-slayer',
+    title: 'Винищувач демонів',
+    titleEn: 'Demon Slayer',
+    titleJp: '鬼滅の刃',
+    year: 2024, ep: 55, rating: 8.9, status: 'airing',
+    genres: ['Екшн', 'Надприродне', 'Історичне'],
+    studio: 'ufotable',
+    age: '16+',
+    palette: ['#0a0014', '#00d4aa', '#ff007a'],
+    accent: '#00d4aa',
+    synopsis: 'Тандзіро стає мисливцем на демонів, щоб повернути сестру до людської подоби.',
+    badges: ['hot', 'dub'],
+    runtime: '24 хв',
+    season: 'Літо 2024'
+  },
+  {
+    id: 'spy',
+    title: 'Шпигун × Сім\'я',
+    titleEn: 'Spy x Family',
+    titleJp: 'SPY×FAMILY',
+    year: 2024, ep: 37, rating: 8.5, status: 'airing',
+    genres: ['Екшн', 'Комедія', 'Сімейне'],
+    studio: 'Wit Studio',
+    age: '12+',
+    palette: ['#1a0a2a', '#ff007a', '#00d4aa'],
+    accent: '#ff66aa',
+    synopsis: 'Шпигун збирає фейкову сім\'ю — і не знає, що дружина — найманка, а донька — телепатка.',
+    badges: ['dub'],
+    runtime: '24 хв',
+    season: 'Осінь 2023'
+  },
+  {
+    id: 'aot',
+    title: 'Атака титанів',
+    titleEn: 'Attack on Titan',
+    titleJp: '進撃の巨人',
+    year: 2023, ep: 87, rating: 9.5, status: 'completed',
+    genres: ['Екшн', 'Драма', 'Темне фентезі'],
+    studio: 'MAPPA',
+    age: '18+',
+    palette: ['#0a0606', '#8b1e1e', '#d4a574'],
+    accent: '#c44',
+    synopsis: 'Людство ховається за стінами від велетенських титанів — поки одного дня стіни не падають.',
+    badges: ['dub'],
+    runtime: '24 хв',
+    season: 'Осінь 2023'
+  },
+  {
+    id: 'mha',
+    title: 'Моя геройська академія',
+    titleEn: 'My Hero Academia',
+    titleJp: '僕のヒーローアカデミア',
+    year: 2024, ep: 159, rating: 8.1, status: 'airing',
+    genres: ['Екшн', 'Школа', 'Супергерої'],
+    studio: 'Bones',
+    age: '12+',
+    palette: ['#0a1a3a', '#00aaff', '#ff3344'],
+    accent: '#00aaff',
+    synopsis: 'У світі, де майже всі мають надсили, хлопчик без них мріє стати найбільшим героєм.',
+    badges: ['dub'],
+    runtime: '24 хв',
+    season: 'Літо 2024'
+  },
+];
+
+// continue-watching slice (with progress)
+const CONTINUE = [
+  { id: 'solo-leveling', episode: 14, total: 25, progress: 0.62, time: '14:22 / 23:50' },
+  { id: 'dandadan', episode: 7, total: 12, progress: 0.15, time: '03:40 / 24:10' },
+  { id: 'apothecary', episode: 19, total: 24, progress: 0.88, time: '21:08 / 24:00' },
+  { id: 'frieren', episode: 25, total: 28, progress: 0.42, time: '10:11 / 24:00' },
+];
+
+const GENRES = [
+  'Екшн', 'Пригоди', 'Комедія', 'Драма', 'Фентезі', 'Романтика', 'Жахи',
+  'Містерія', 'Психологія', 'Школа', 'Спорт', 'Надприродне', 'Темне фентезі',
+  'Меха', 'Ісекай', 'Сейнен', 'Сьонен', 'Сейнен', 'Слайс-оф-лайф',
+];
+
+const YEARS = [2026, 2025, 2024, 2023, 2022, 2021, 2020];
+
+// helpers
+function getAnime(id) { return ANIME.find(a => a.id === id) || ANIME[0]; }
+
+window.ANIME = ANIME;
+window.CONTINUE = CONTINUE;
+window.GENRES = GENRES;
+window.YEARS = YEARS;
+window.getAnime = getAnime;

@@ -1,0 +1,17 @@
+{
+  "name": "animemix_ua",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs && source venv/bin/activate && python server.py"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "esbuild": "^0.28.0"
+  }
+}
