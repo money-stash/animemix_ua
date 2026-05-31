@@ -68,6 +68,24 @@ const I18N = {
     tabEpisodes: "Епізоди", tabCast: "Персонажі", tabReviews: "Відгуки", tabRelated: "Схоже", tabComments: "Обговорення",
     seasonLabel: "СЕЗОН:", episodesMetaInfo: "25 ЕПІЗОДІВ · 4K · UA DUB · UA SUB",
     epLabel: "ЕП", epWatched: "ПЕРЕГЛЯНУТО", epCurrent: "ЗАРАЗ",
+    episodesWord: "епізодів",
+    filtersSidebarLabel: "ФІЛЬТРИ",
+    paginationNext: "ДАЛІ",
+    paginationPrev: "НАЗАД",
+    reviewSeason: "Найкраща анімація сезону. MAPPA нарешті зробила те, що від них чекали з 2022. Битва в 8 епізоді — це майстер-клас з режисури. Геніально.",
+    chatMsg1: "нарешті 14 епізод!!! 😭",
+    chatMsg2: "щойно",
+    authErrRequired: "Всі поля обов'язкові",
+    authErrBadEmail: "Некоректний email",
+    authErrNickShort: "Нік мінімум 3 символи",
+    authErrNickLong: "Нік максимум 32 символи",
+    authErrNickChars: "Нік може містити лише літери, цифри, _ . -",
+    authErrPassShort: "Пароль мінімум 8 символів",
+    authErrEmailTaken: "Цей email вже зареєстровано",
+    authErrNickTaken: "Цей нік вже зайнятий",
+    authErrInvalid: "Невірний email або пароль",
+    authErrRequired2: "Введи email і пароль",
+    authErrNotFound: "Користувача не знайдено",
     epDescriptionSample: "Сон-у виявляє небезпечне підземелля та починає тренування з тіньовою системою. Битва триватиме всю ніч.",
     ep1Title: "Пробудження", ep2Title: "Іспит", ep3Title: "Червоне підземелля",
     ep4Title: "Пастка", ep5Title: "Подвійне підземелля", ep6Title: "Виклик",
@@ -201,6 +219,24 @@ const I18N = {
     tabEpisodes: "Episodes", tabCast: "Characters", tabReviews: "Reviews", tabRelated: "Similar", tabComments: "Discussion",
     seasonLabel: "SEASON:", episodesMetaInfo: "25 EPISODES · 4K · UA DUB · UA SUB",
     epLabel: "EP", epWatched: "WATCHED", epCurrent: "NOW",
+    episodesWord: "episodes",
+    filtersSidebarLabel: "FILTERS",
+    paginationNext: "NEXT",
+    paginationPrev: "PREV",
+    reviewSeason: "Best animation of the season. MAPPA finally delivered what fans were waiting for since 2022. The battle in episode 8 is a masterclass in direction. Genius.",
+    chatMsg1: "finally episode 14!!! 😭",
+    chatMsg2: "just now",
+    authErrRequired: "All fields are required",
+    authErrBadEmail: "Invalid email address",
+    authErrNickShort: "Username must be at least 3 characters",
+    authErrNickLong: "Username must be at most 32 characters",
+    authErrNickChars: "Username can only contain letters, numbers, _ . -",
+    authErrPassShort: "Password must be at least 8 characters",
+    authErrEmailTaken: "This email is already registered",
+    authErrNickTaken: "This username is already taken",
+    authErrInvalid: "Invalid email or password",
+    authErrRequired2: "Enter your email and password",
+    authErrNotFound: "User not found",
     epDescriptionSample: "Sung Jin-Woo discovers a dangerous dungeon and begins training with the shadow system. The battle will last all night.",
     ep1Title: "Awakening", ep2Title: "The Test", ep3Title: "Red Dungeon",
     ep4Title: "The Trap", ep5Title: "Double Dungeon", ep6Title: "The Challenge",
@@ -291,6 +327,59 @@ window.getLang = function() {
 // Прості функції без геттерів — просто читають потрібне поле на момент рендеру.
 // Компоненти що мають useLang() ре-рендеряться на langchange → отримують нові значення.
 // Підтримуємо обидва формати: snake_case (API) і camelCase (legacy data.js)
-window.animeTitle    = function(a) { if (!a) return ''; return window.__lang === 'en' ? (a.title_en || a.titleEn || a.title || '') : (a.title_uk || a.title || ''); };
-window.animeSynopsis = function(a) { if (!a) return ''; return window.__lang === 'en' ? (a.synopsis_en || a.synopsis || '') : (a.synopsis_uk || a.synopsis || ''); };
-window.animeSeason   = function(a) { if (!a) return ''; return window.__lang === 'en' ? (a.season_en || a.season || '') : (a.season_uk || a.season || ''); };
+// Lookup maps — заповнюються після завантаження даних з API
+window.__animeEnMap = {}; // slug → { title_en, synopsis_en, season_en }
+window.addEventListener('animemix-data-ready', () => {
+  (window.ANIME || []).forEach(a => {
+    const key = a.id || a.slug;
+    if (key) window.__animeEnMap[key] = {
+      title:    a.title_en || a.titleEn || '',
+      synopsis: a.synopsis_en || '',
+      season:   a.season_en || '',
+    };
+  });
+});
+
+window.animeTitle = function(a) {
+  if (!a) return '';
+  if (window.__lang === 'en') {
+    return a.title_en || a.titleEn || (window.__animeEnMap[a.id || a.slug]?.title) || a.title || '';
+  }
+  return a.title_uk || a.title || '';
+};
+window.animeSynopsis = function(a) {
+  if (!a) return '';
+  if (window.__lang === 'en') {
+    return a.synopsis_en || (window.__animeEnMap[a.id || a.slug]?.synopsis) || a.synopsis || '';
+  }
+  return a.synopsis_uk || a.synopsis || '';
+};
+window.animeSeason = function(a) {
+  if (!a) return '';
+  if (window.__lang === 'en') {
+    return a.season_en || (window.__animeEnMap[a.id || a.slug]?.season) || a.season || '';
+  }
+  return a.season_uk || a.season || '';
+};
+// Genres array in current language
+// Genre slug → EN name map (built after data loads)
+window.__genreSlugToEn = {};
+window.addEventListener('animemix-data-ready', () => {
+  if (window.GENRE_SLUGS) window.GENRE_SLUGS.forEach(g => { window.__genreSlugToEn[g.slug] = g.name_en; });
+});
+window.animeGenres = function(a) {
+  if (!a) return [];
+  if (window.__lang === 'en') {
+    // 1. Pre-built EN array
+    if (a.genresEn && a.genresEn.length) return a.genresEn;
+    // 2. Translate UK names via slug map
+    if (a.genres && a.genres.length && window.GENRE_SLUGS) {
+      return a.genres.map(uk => {
+        const match = window.GENRE_SLUGS.find(g => g.name_uk === uk);
+        return match ? match.name_en : uk;
+      });
+    }
+    return a.genres || [];
+  }
+  return a.genres || [];
+};

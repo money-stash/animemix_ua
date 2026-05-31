@@ -218,26 +218,54 @@ h1, h2, h3, h4 { font-family: 'Unbounded', sans-serif; margin: 0; letter-spacing
   border: 1px solid transparent;
   background: transparent;
   color: var(--ink);
-  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  transition: transform 0.22s cubic-bezier(.2,.9,.3,1.2), box-shadow 0.22s, background 0.2s, border-color 0.2s, color 0.2s;
   white-space: nowrap;
+  position: relative;
+  overflow: hidden;
 }
-.btn:hover { transform: translateY(-1px); }
+
+/* Shimmer sweep on hover */
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+.btn:hover::before { left: 150%; }
+
+.btn:hover { transform: translateY(-2px) scale(1.02); }
+.btn:active { transform: translateY(0) scale(0.98); transition-duration: 0.08s; }
+
+/* ── Primary ── */
 .btn-primary {
   background: var(--grad-primary);
   color: white;
   box-shadow: 0 8px 30px -8px rgba(255, 45, 149, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 .btn-primary:hover {
-  box-shadow: 0 12px 40px -8px rgba(255, 45, 149, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  box-shadow: 0 16px 48px -8px rgba(255, 45, 149, 0.85),
+              0 0 0 1px rgba(255,45,149,0.4),
+              inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  filter: brightness(1.08);
 }
+
+/* ── Ghost ── */
 .btn-ghost {
   border: 1px solid var(--glass-border);
   background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(8px);
 }
 .btn-ghost:hover {
-  border-color: rgba(255, 45, 149, 0.5);
-  background: rgba(255, 45, 149, 0.08);
+  border-color: var(--magenta);
+  background: rgba(255, 45, 149, 0.1);
+  color: var(--ink);
+  box-shadow: 0 0 0 1px rgba(255,45,149,0.25),
+              0 8px 24px -8px rgba(255,45,149,0.4),
+              inset 0 0 20px rgba(255,45,149,0.06);
 }
 
 /* ============== badge / chip ============== */
@@ -254,6 +282,15 @@ h1, h2, h3, h4 { font-family: 'Unbounded', sans-serif; margin: 0; letter-spacing
   border: 1px solid var(--glass-border);
   background: rgba(255, 255, 255, 0.04);
   color: var(--ink-dim);
+  transition: border-color 0.18s, background 0.18s, color 0.18s, transform 0.18s, box-shadow 0.18s;
+}
+/* Chips that are clickable (filter buttons in catalog) */
+button.chip:hover {
+  border-color: rgba(176, 38, 255, 0.6);
+  background: rgba(176, 38, 255, 0.12);
+  color: var(--violet-soft);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px -4px rgba(176,38,255,0.4);
 }
 .chip-hot {
   border-color: rgba(255, 45, 149, 0.4);
@@ -322,6 +359,62 @@ h1, h2, h3, h4 { font-family: 'Unbounded', sans-serif; margin: 0; letter-spacing
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
+}
+
+/* ============== inputs ============== */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+textarea {
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  outline: none;
+}
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="password"]:hover,
+input[type="search"]:hover {
+  border-color: rgba(176, 38, 255, 0.4) !important;
+  background: rgba(255,255,255,0.06) !important;
+}
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus {
+  border-color: var(--magenta) !important;
+  box-shadow: 0 0 0 3px rgba(255,45,149,0.15),
+              0 0 20px rgba(255,45,149,0.1) !important;
+  background: rgba(255,255,255,0.07) !important;
+}
+
+/* ============== glass interactive (search bar, nav buttons) ============== */
+.glass:hover:not(.no-hover) {
+  border-color: rgba(167, 139, 250, 0.35) !important;
+  box-shadow: 0 8px 32px -8px rgba(176,38,255,0.25),
+              0 0 0 1px rgba(167,139,250,0.2) !important;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* ============== clickable cover cards ============== */
+.cover {
+  transition: transform 0.35s cubic-bezier(.2,.9,.3,1.2), box-shadow 0.3s !important;
+}
+.cover:hover {
+  transform: translateY(-6px) scale(1.025) translateZ(0) !important;
+  box-shadow: 0 24px 48px -12px rgba(0,0,0,0.7),
+              0 0 0 1px rgba(255,255,255,0.1) !important;
+}
+
+/* ============== year / sort pill buttons ============== */
+.pill-btn {
+  transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.18s, box-shadow 0.18s;
+}
+.pill-btn:hover {
+  border-color: rgba(255,45,149,0.5) !important;
+  background: rgba(255,45,149,0.1) !important;
+  color: var(--magenta) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px -4px rgba(255,45,149,0.3);
 }
 
 /* ============== app shell ============== */

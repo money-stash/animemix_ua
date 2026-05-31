@@ -86,7 +86,7 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
                 <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 12 }}>METADATA</div>
                 <Meta k={t('metaStudio')} v={a.studio} />
                 <Meta k={t('metaYear')} v={a.year} />
-                <Meta k={t('metaSeason')} v={a.season} />
+                <Meta k={t('metaSeason')} v={animeSeason(a)} />
                 <Meta k={t('metaEpisodes')} v={`${a.ep} × ${a.runtime}`} />
                 <Meta k={t('metaStatus')} v={a.status === 'airing' ? t('metaStatusAiring') : t('metaStatusCompleted')} accent={a.status === 'airing' ? 'var(--lime)' : 'var(--ink-mute)'} />
                 <Meta k={t('metaAge')} v={a.age} />
@@ -115,11 +115,11 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
               </div>
 
               <p style={{ fontSize: mobile ? 15 : 17, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', maxWidth: 720, marginBottom: 24 }}>
-                {a.synopsis}
+                {animeSynopsis(a)}
               </p>
 
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 28 }}>
-                {a.genres.map(g => <span key={g} className="chip" style={{ background: `${a.accent}15`, borderColor: `${a.accent}55`, color: a.accent, fontSize: 11, padding: '5px 12px' }}>{g}</span>)}
+                {animeGenres(a).map(g => <span key={g} className="chip" style={{ background: `${a.accent}15`, borderColor: `${a.accent}55`, color: a.accent, fontSize: 11, padding: '5px 12px' }}>{g}</span>)}
               </div>
 
               <div style={{ display: 'flex', gap: 12, marginBottom: 40, flexWrap: 'wrap' }}>
@@ -328,7 +328,7 @@ const ReviewsTab = ({ anime, mobile }) => {
   const { t } = useLang();
   const reviews = [
     { u: 'kira_ua', av: '#ff2d95', score: 10, time: '2 год тому', upvotes: 247,
-      text: 'Найкраща анімація сезону. MAPPA нарешті зробила те, що від них чекали з 2022. Битва в 8 епізоді — це майстер-клас з режисури. Геніально.' },
+      text: t('reviewSeason') },
     { u: 'akira_otaku', av: '#00f0ff', score: 9, time: '5 год тому', upvotes: 198,
       text: 'Озвучення — пушка. Український дубляж нічим не поступається оригіналу, голос Сон-у підібрали ідеально. Чекаю кожну середу як на свято.' },
     { u: 'shadow.king', av: '#b026ff', score: 8, time: '1 день тому', upvotes: 124,

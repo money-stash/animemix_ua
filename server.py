@@ -11,14 +11,24 @@ def create_app(env=None):
     cfg_key = env or os.environ.get('FLASK_ENV', 'default')
     app.config.from_object(config_map[cfg_key])
 
+    # ── JWT ───────────────────────────────────────────────────────────────────
+    import datetime as dt
+    app.config['JWT_SECRET_KEY']             = os.environ.get('JWT_SECRET_KEY', 'animemix-jwt-dev-secret-change-in-prod')
+    app.config['JWT_ACCESS_TOKEN_EXPIRES']   = dt.timedelta(minutes=30)
+    app.config['JWT_REFRESH_TOKEN_EXPIRES']  = dt.timedelta(days=30)
+
+    from flask_jwt_extended import JWTManager
+    JWTManager(app)
+
     # ── Extensions ────────────────────────────────────────────────────────────
     CORS(app)
     from backend.database import init_db
     init_db(app)
 
-    # ── API blueprint ─────────────────────────────────────────────────────────
-    from backend.api import api_bp
+    # ── API blueprints ────────────────────────────────────────────────────────
+    from backend.api import api_bp, auth_bp
     app.register_blueprint(api_bp)
+    app.register_blueprint(auth_bp)
 
     # ── Static file routes ────────────────────────────────────────────────────
     @app.route('/')

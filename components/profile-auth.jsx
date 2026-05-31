@@ -327,7 +327,26 @@ const AuthPage = ({ setRoute }) => {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const { mobile, tablet, pad } = useBP();
+
+  const handleSubmit = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      if (mode === 'login') {
+        await AuthClient.login(email, pass);
+      } else {
+        await AuthClient.register(email, name, pass);
+      }
+      setRoute('home');
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="page-enter" style={{
@@ -436,8 +455,26 @@ const AuthPage = ({ setRoute }) => {
             )}
           </div>
 
-          <button onClick={() => setRoute('home')} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '16px 28px', fontSize: 13, marginTop: 24 }}>
-            {mode === 'login' ? t('authBtnLogin') : t('authBtnSignup')} <Icon name="arrow-right" size={16} />
+          {error && (
+            <div style={{
+              marginTop: 16, padding: '12px 16px', borderRadius: 10,
+              background: 'rgba(255,45,100,0.12)', border: '1px solid rgba(255,45,100,0.4)',
+              color: '#ff6b6b', fontSize: 13,
+            }}>
+              ⚠ {error}
+            </div>
+          )}
+
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className="btn btn-primary"
+            style={{ width: '100%', justifyContent: 'center', padding: '16px 28px', fontSize: 13, marginTop: 16, opacity: loading ? 0.7 : 1 }}
+          >
+            {loading
+              ? <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: 'spin-slow 0.8s linear infinite' }}><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Завантаження...</span>
+              : <>{mode === 'login' ? t('authBtnLogin') : t('authBtnSignup')} <Icon name="arrow-right" size={16} /></>
+            }
           </button>
 
           <div style={{ textAlign: 'center', marginTop: 20, fontSize: 13, color: 'var(--ink-dim)' }}>

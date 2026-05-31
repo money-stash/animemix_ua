@@ -73,7 +73,7 @@ const CatalogPage = ({ openAnime }) => {
             transition: 'transform 0.3s cubic-bezier(.2,.9,.3,1)',
           } : { padding: 24, borderRadius: 20, position: 'sticky', top: 100 }}>
             <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Icon name="filter" size={12} /> ФІЛЬТРИ
+              <Icon name="filter" size={12} /> {t('filtersSidebarLabel')}
               <span style={{ flex: 1 }} />
               {mobile
                 ? <button onClick={() => setFiltersOpen(false)} style={{ background: 'transparent', border: 'none', color: 'var(--ink-dim)', cursor: 'pointer', fontSize: 16 }}>✕</button>
@@ -120,7 +120,7 @@ const CatalogPage = ({ openAnime }) => {
             <FilterGroup label={t('filterGroupYear')}>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {['all', ...YEARS].map(y => (
-                  <button key={y} onClick={() => setYear(y)} style={{
+                  <button key={y} onClick={() => setYear(y)} className="pill-btn" style={{
                     padding: '5px 10px', borderRadius: 6,
                     background: year === y ? 'rgba(255, 45, 149, 0.15)' : 'transparent',
                     border: year === y ? '1px solid rgba(255, 45, 149, 0.5)' : '1px solid var(--line)',
@@ -256,14 +256,14 @@ const CatalogPage = ({ openAnime }) => {
 
             {/* pagination */}
             <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginTop: 60 }}>
-              {['1', '2', '3', '...', '127', 'NEXT'].map((p, i) => (
+              {['1', '2', '3', '...', '127', t('paginationNext')].map((p, i) => (
                 <button key={i} style={{
                   minWidth: 40, height: 40, borderRadius: 8,
                   background: p === '1' ? 'linear-gradient(135deg, var(--magenta), var(--violet))' : 'rgba(255,255,255,0.04)',
                   border: p === '1' ? 'none' : '1px solid var(--line-strong)',
                   color: p === '1' ? 'white' : 'var(--ink-dim)',
                   fontFamily: 'JetBrains Mono', fontSize: 12, cursor: 'pointer',
-                  padding: p === 'NEXT' ? '0 14px' : 0,
+                  padding: p === t('paginationNext') ? '0 14px' : 0,
                 }}>{p}</button>
               ))}
             </div>
@@ -321,7 +321,7 @@ const ListRow = ({ anime, onClick, idx }) => { useLang(); return (
       </div>
     </div>
     <div style={{ display: 'flex', gap: 6 }}>
-      {anime.genres.slice(0, 3).map(g => <span key={g} className="chip" style={{ fontSize: 10 }}>{g}</span>)}
+      {animeGenres(anime).slice(0, 3).map(g => <span key={g} className="chip" style={{ fontSize: 10 }}>{g}</span>)}
     </div>
     <div style={{ textAlign: 'right', minWidth: 80 }}>
       <div className="font-mono neon-text-magenta" style={{ fontSize: 14 }}>★ {anime.rating}</div>

@@ -341,7 +341,7 @@ const PopRow = ({ label, value, options = [], onChange, accent }) => (
 const LiveChat = ({ anime }) => {
   const { t } = useLang();
   const messages = [
-    { u: 'kira_ua', av: '#ff2d95', text: 'нарешті 14 епізод!!! 😭', t: 'щойно' },
+    { u: 'kira_ua', av: '#ff2d95', text: t('chatMsg1'), t: t('chatMsg2') },
     { u: 'shadow.king', av: '#b026ff', text: 'озвучка цей раз просто 10/10', t: '12с' },
     { u: 'pixel.kun', av: '#c4ff3d', text: 'хто крім мене перемотує?', t: '34с' },
     { u: 'lain.exe', av: '#00f0ff', text: 'OST тут просто шик', t: '1хв' },

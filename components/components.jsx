@@ -198,7 +198,7 @@ const CoverArt = ({ id, over, picker, open, zIndex = 1, radius = 0, hideUploadBt
 
 // --------- Cover (your poster, or designed neon placeholder) ---------
 const Cover = ({ anime, size = 'md', showInfo = false, onClick, idx = 0, fluid = false }) => {
-  useLang();
+  const { t } = useLang();
   const [hovered, setHovered] = useState(false);
   const coverUrl = useCover(anime.id);
   const [over, dropHandlers, picker, openPicker] = useDropCover(anime.id);
@@ -299,7 +299,7 @@ const Cover = ({ anime, size = 'md', showInfo = false, onClick, idx = 0, fluid =
         }}>{animeTitle(anime)}</div>
         {showInfo && (
           <div style={{ marginTop: 8, fontSize: 11, color: 'rgba(255,255,255,0.7)' }}>
-            {anime.ep} еп · {anime.genres.slice(0, 2).join(' · ')}
+            {anime.ep} {t("episodesWord")} · {animeGenres(anime).slice(0, 2).join(' · ')}
           </div>
         )}
       </div>
@@ -460,7 +460,7 @@ const NotifBell = () => {
   );
 };
 
-const TopNav = ({ route, setRoute, openSearch }) => {
+const TopNav = ({ route, setRoute, openSearch, currentUser }) => {
   useLang();
   const [scrolled, setScrolled] = useState(false);
   const { mobile, tablet, pad } = useBP();
@@ -545,13 +545,24 @@ const TopNav = ({ route, setRoute, openSearch }) => {
         {!mobile && <LangToggle />}
         {!mobile && <NotifBell />}
 
-        <button onClick={() => setRoute('profile')} style={{
-          width: mobile ? 38 : 40, height: mobile ? 38 : 40, borderRadius: '50%', cursor: 'pointer', flexShrink: 0,
-          background: 'linear-gradient(135deg, #ff2d95, #b026ff)',
-          border: '2px solid rgba(167, 139, 250, 0.4)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          color: 'white', fontWeight: 700, fontSize: 14,
-        }}>Я</button>
+        <button
+          onClick={() => setRoute(currentUser ? 'profile' : 'auth')}
+          style={{
+            width: mobile ? 38 : 40, height: mobile ? 38 : 40, borderRadius: '50%', cursor: 'pointer', flexShrink: 0,
+            background: 'linear-gradient(135deg, #ff2d95, #b026ff)',
+            border: currentUser ? '2px solid rgba(0, 240, 255, 0.6)' : '2px solid rgba(167, 139, 250, 0.4)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: 'white', fontWeight: 700, fontSize: 14,
+            boxShadow: currentUser ? '0 0 12px rgba(0,240,255,0.3)' : 'none',
+            transition: 'all 0.2s',
+          }}
+          title={currentUser ? currentUser.username : 'Увійти'}
+        >
+          {currentUser
+            ? (currentUser.username || '?').slice(0, 1).toUpperCase()
+            : <Icon name="user" size={18} />
+          }
+        </button>
       </div>
     </header>
 
@@ -622,7 +633,7 @@ const SearchPalette = ({ open, onClose, onPick }) => {
     return ANIME.filter(a =>
       animeTitle(a).toLowerCase().includes(term) ||
       a.titleEn.toLowerCase().includes(term) ||
-      a.genres.join(' ').toLowerCase().includes(term)
+      animeGenres(a).join(' ').toLowerCase().includes(term) || a.genres.join(' ').toLowerCase().includes(term)
     ).slice(0, 8);
   }, [q]);
 
@@ -669,7 +680,7 @@ const SearchPalette = ({ open, onClose, onPick }) => {
               <div style={{ flex: 1 }}>
                 <div className="font-display" style={{ fontSize: 14, fontWeight: 600 }}>{animeTitle(a)}</div>
                 <div style={{ fontSize: 11, color: 'var(--ink-mute)', marginTop: 2 }}>
-                  {a.year} · {a.genres.join(' · ')} · ★ {a.rating}
+                  {a.year} · {animeGenres(a).join(' · ')} · ★ {a.rating}
                 </div>
               </div>
               <Icon name="chevron-right" size={16} style={{ color: 'var(--violet-soft)' }} />

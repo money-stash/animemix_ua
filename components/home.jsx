@@ -452,7 +452,7 @@ const FeaturedCinematic = ({ anime, onPlay, onOpen, mobile, pad }) => {
           {anime.titleJp}
         </div>
         <p style={{ fontSize: mobile ? 14 : 16, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', maxWidth: 520, marginBottom: 24 }}>
-          {anime.synopsis}
+          {animeSynopsis(anime)}
         </p>
         <div style={{ display: 'flex', gap: mobile ? 8 : 16, alignItems: 'center', flexWrap: 'wrap', marginBottom: 24, fontSize: mobile ? 11 : 13, color: 'rgba(255,255,255,0.7)' }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -461,7 +461,7 @@ const FeaturedCinematic = ({ anime, onPlay, onOpen, mobile, pad }) => {
           <span>·</span>
           <span>{anime.year}</span>
           <span>·</span>
-          <span>{anime.ep} епізодів</span>
+          <span>{anime.ep} {t('episodesWord')}</span>
           {!mobile && <span>·</span>}
           {!mobile && <span>{anime.studio}</span>}
           <span>·</span>
@@ -481,7 +481,7 @@ const FeaturedCinematic = ({ anime, onPlay, onOpen, mobile, pad }) => {
 
         {/* genre row */}
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          {anime.genres.map(g => <span key={g} className="chip">{g}</span>)}
+          {animeGenres(anime).map(g => <span key={g} className="chip">{g}</span>)}
         </div>
       </div>
 
@@ -632,7 +632,7 @@ const BigTile = ({ anime, onClick, compact = false, mobile }) => {
           {animeTitle(anime)}
         </div>
         {!compact && <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', maxWidth: 420, lineHeight: 1.5, marginBottom: 18 }}>
-          {anime.synopsis}
+          {animeSynopsis(anime)}
         </p>}
         <div style={{ display: 'flex', gap: 12, alignItems: 'center', fontSize: 11, color: 'rgba(255,255,255,0.7)' }}>
           <span style={{ color: 'var(--gold)' }}>★ {anime.rating}</span>

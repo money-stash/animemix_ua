@@ -54,6 +54,14 @@ function App() {
   const [route, setRoute] = useState('home');
   const [animeId, setAnimeId] = useState('solo-leveling');
   const [searchOpen, setSearchOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(window.__currentUser || null);
+
+  // Слухаємо зміни авторизації
+  useEffect(() => {
+    const h = (e) => setCurrentUser(e.detail);
+    window.addEventListener('auth-change', h);
+    return () => window.removeEventListener('auth-change', h);
+  }, []);
 
   // apply tweaks to CSS vars
   useEffect(() => {
@@ -97,7 +105,7 @@ function App() {
   return (
     <div data-screen-label={routeLabel(route)}>
       {t.scanlines && <div className="scan-sweep" />}
-      {showShell && <TopNav route={route} setRoute={goTo} openSearch={() => setSearchOpen(true)} />}
+      {showShell && <TopNav route={route} setRoute={goTo} openSearch={() => setSearchOpen(true)} currentUser={currentUser} />}
 
       {route === 'home' && <HomePage setRoute={goTo} openAnime={openAnime} />}
       {route === 'catalog' && <CatalogPage openAnime={openAnime} />}
