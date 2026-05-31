@@ -6,6 +6,7 @@
 // DETAILS PAGE
 // =================================================================
 const DetailsPage = ({ animeId, openAnime, setRoute }) => {
+  const { t } = useLang();
   const a = getAnime(animeId || 'solo-leveling');
   const [tab, setTab] = useState('episodes');
   const [season, setSeason] = useState(2);
@@ -17,7 +18,7 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
   const episodes = useMemo(() => {
     return Array.from({ length: 25 }, (_, i) => ({
       n: i + 1,
-      title: ['Пробудження', 'Іспит', 'Червоне підземелля', 'Пастка', 'Подвійне підземелля', 'Виклик', 'Ще не пізно', 'Шанс', 'Розкол', 'Тіньовий монарх'][i % 10],
+      title: [t('ep1Title'), t('ep2Title'), t('ep3Title'), t('ep4Title'), t('ep5Title'), t('ep6Title'), t('ep7Title'), t('ep8Title'), t('ep9Title'), t('ep10Title')][i % 10],
       duration: '23:50',
       watched: i < 14,
       current: i === 13,
@@ -52,7 +53,7 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
             background: 'transparent', border: 'none', color: 'var(--ink-dim)', cursor: 'pointer',
             fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.15em',
           }}>
-            <Icon name="arrow-left" size={14} /> НА ГОЛОВНУ
+            <Icon name="arrow-left" size={14} /> {t('detailsBackBtn')}
           </button>
 
           <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '320px 1fr', gap: mobile ? 28 : 48, alignItems: 'flex-start' }}>
@@ -71,7 +72,7 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
                 <div className="scanlines" style={{ position: 'absolute', inset: 0, zIndex: 2 }} />
                 <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, zIndex: 3, padding: 20, background: 'linear-gradient(to top, rgba(0,0,0,0.85), transparent)' }}>
                   <div className="font-mono" style={{ fontSize: 10, color: a.accent, letterSpacing: '0.15em', marginBottom: 6 }}>{a.titleJp}</div>
-                  <div className="font-display" style={{ fontSize: 22, fontWeight: 700 }}>{a.title}</div>
+                  <div className="font-display" style={{ fontSize: 22, fontWeight: 700 }}>{animeTitle(a)}</div>
                 </div>
                 {/* corner brackets */}
                 <div style={{ position: 'absolute', top: 8, left: 8, zIndex: 4, width: 16, height: 16, borderLeft: `2px solid ${a.accent}`, borderTop: `2px solid ${a.accent}` }} />
@@ -83,13 +84,13 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
               {/* below poster: quick stats */}
               <div className="glass" style={{ marginTop: 16, padding: 18, borderRadius: 16 }}>
                 <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 12 }}>METADATA</div>
-                <Meta k="СТУДІЯ" v={a.studio} />
-                <Meta k="РІК" v={a.year} />
-                <Meta k="СЕЗОН" v={a.season} />
-                <Meta k="ЕПІЗОДИ" v={`${a.ep} × ${a.runtime}`} />
-                <Meta k="СТАТУС" v={a.status === 'airing' ? '● ВИХОДИТЬ' : 'ЗАВЕРШЕНО'} accent={a.status === 'airing' ? 'var(--lime)' : 'var(--ink-mute)'} />
-                <Meta k="ВІК" v={a.age} />
-                <Meta k="ДЖЕРЕЛО" v="Манґа" />
+                <Meta k={t('metaStudio')} v={a.studio} />
+                <Meta k={t('metaYear')} v={a.year} />
+                <Meta k={t('metaSeason')} v={a.season} />
+                <Meta k={t('metaEpisodes')} v={`${a.ep} × ${a.runtime}`} />
+                <Meta k={t('metaStatus')} v={a.status === 'airing' ? t('metaStatusAiring') : t('metaStatusCompleted')} accent={a.status === 'airing' ? 'var(--lime)' : 'var(--ink-mute)'} />
+                <Meta k={t('metaAge')} v={a.age} />
+                <Meta k={t('metaSource')} v={t('metaSourceValue')} />
               </div>
             </div>
 
@@ -99,7 +100,7 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
                 ▶ {a.titleEn.toUpperCase()} · S0{season} · {a.year}
               </div>
               <h1 className="font-display" style={{ fontSize: 'clamp(40px, 9vw, 80px)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.03em', marginBottom: 10 }}>
-                <span className="glitch glitch-live" data-text={a.title}>{a.title}</span>
+                <span className="glitch glitch-live" data-text={animeTitle(a)}>{animeTitle(a)}</span>
               </h1>
               <div className="font-jp" style={{ fontSize: mobile ? 18 : 26, color: a.accent, opacity: 0.9, marginBottom: 24 }}>
                 {a.titleJp}
@@ -107,10 +108,10 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
 
               {/* stats bar */}
               <div style={{ display: 'flex', gap: mobile ? 20 : 32, flexWrap: 'wrap', marginBottom: 28, fontSize: 13 }}>
-                <Stat label="РЕЙТИНГ" value={a.rating} sub="MAL 9.4" big color="var(--gold)" star />
-                <Stat label="МІСЦЕ" value="#12" sub="ТИЖНЯ" big />
-                <Stat label="ЕПІЗОДИ" value={a.ep} sub={a.status === 'airing' ? `${Math.floor(a.ep * 0.6)} вийшло` : 'усі'} big />
-                <Stat label="ГЛЯДАЧІВ" value="284K" sub="+12% / тиж" big />
+                <Stat label={t('statLabelRating')} value={a.rating} sub="MAL 9.4" big color="var(--gold)" star />
+                <Stat label={t('statLabelRank')} value="#12" sub={t('statSubWeek')} big />
+                <Stat label={t('statLabelEpisodes')} value={a.ep} sub={a.status === 'airing' ? `${Math.floor(a.ep * 0.6)} ${t('episodesAiredSub')}` : t('episodesAllSub')} big />
+                <Stat label={t('statLabelViewers')} value="284K" sub={t('statSubViewersGrowth')} big />
               </div>
 
               <p style={{ fontSize: mobile ? 15 : 17, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', maxWidth: 720, marginBottom: 24 }}>
@@ -123,10 +124,10 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
 
               <div style={{ display: 'flex', gap: 12, marginBottom: 40, flexWrap: 'wrap' }}>
                 <button onClick={() => setRoute('player')} className="btn btn-primary" style={{ padding: '16px 32px', fontSize: 14, flex: mobile ? '1 1 100%' : undefined, justifyContent: 'center' }}>
-                  <Icon name="play" size={18} /> Продовжити еп. 14
+                  <Icon name="play" size={18} /> {t('btnContinueWatching')}
                 </button>
                 <button onClick={() => setInList(!inList)} className="btn btn-ghost" style={{ padding: '16px 24px' }}>
-                  <Icon name={inList ? 'check' : 'plus'} size={16} /> {inList ? 'У списку' : 'У список'}
+                  <Icon name={inList ? 'check' : 'plus'} size={16} /> {inList ? t('btnInList') : t('btnAddToList')}
                 </button>
                 <button className="btn btn-ghost" style={{ padding: 16 }}>
                   <Icon name="heart" size={16} />
@@ -139,8 +140,8 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
               {/* progress bar for series */}
               <div className="glass" style={{ padding: 18, borderRadius: 14 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                  <div className="font-mono" style={{ fontSize: 10, color: 'var(--ink-mute)', letterSpacing: '0.2em' }}>ТВІЙ ПРОГРЕС · S0{season}</div>
-                  <div className="font-mono neon-text-magenta" style={{ fontSize: 13 }}>14 / 25 ЕП · 56%</div>
+                  <div className="font-mono" style={{ fontSize: 10, color: 'var(--ink-mute)', letterSpacing: '0.2em' }}>{t('progressLabel')}</div>
+                  <div className="font-mono neon-text-magenta" style={{ fontSize: 13 }}>{t('progressValue')}</div>
                 </div>
                 <div style={{ height: 6, background: 'rgba(255,255,255,0.05)', borderRadius: 3, overflow: 'hidden' }}>
                   <div style={{ width: '56%', height: '100%', background: 'linear-gradient(to right, var(--magenta), var(--violet))', boxShadow: '0 0 12px rgba(255,45,149,0.6)' }} />
@@ -156,11 +157,11 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
         {/* tab nav */}
         <div className="rail" style={{ display: 'flex', gap: 0, borderBottom: '1px solid var(--line)', marginBottom: 32, overflowX: 'auto' }}>
           {[
-            { v: 'episodes', l: 'Епізоди', n: a.ep },
-            { v: 'cast', l: 'Персонажі', n: 12 },
-            { v: 'reviews', l: 'Відгуки', n: 1247 },
-            { v: 'related', l: 'Схоже', n: 18 },
-            { v: 'comments', l: 'Обговорення', n: 3402 },
+            { v: 'episodes', l: t('tabEpisodes'), n: a.ep },
+            { v: 'cast', l: t('tabCast'), n: 12 },
+            { v: 'reviews', l: t('tabReviews'), n: 1247 },
+            { v: 'related', l: t('tabRelated'), n: 18 },
+            { v: 'comments', l: t('tabComments'), n: 3402 },
           ].map(t => (
             <button key={t.v} onClick={() => setTab(t.v)} style={{
               padding: '16px 20px', whiteSpace: 'nowrap', flexShrink: 0,
@@ -181,7 +182,7 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
           <div>
             {/* season selector */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
-              <span className="font-mono" style={{ fontSize: 11, color: 'var(--ink-mute)', letterSpacing: '0.15em' }}>СЕЗОН:</span>
+              <span className="font-mono" style={{ fontSize: 11, color: 'var(--ink-mute)', letterSpacing: '0.15em' }}>{t('seasonLabel')}</span>
               {[1, 2].map(s => (
                 <button key={s} onClick={() => setSeason(s)} style={{
                   padding: '8px 18px', borderRadius: 100,
@@ -192,7 +193,7 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
                 }}>S0{s}</button>
               ))}
               <div style={{ flex: 1 }} />
-              <div className="font-mono" style={{ fontSize: 10, color: 'var(--ink-mute)' }}>25 ЕПІЗОДІВ · 4K · UA DUB · UA SUB</div>
+              <div className="font-mono" style={{ fontSize: 10, color: 'var(--ink-mute)' }}>{t('episodesMetaInfo')}</div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : 'repeat(2, 1fr)', gap: 14 }}>
@@ -236,61 +237,65 @@ const Stat = ({ label, value, sub, big, color, star }) => (
   </div>
 );
 
-const EpisodeCard = ({ ep, anime, onClick }) => (
-  <div onClick={onClick} className="glass" style={{
-    display: 'flex', gap: 14, padding: 14, borderRadius: 14, cursor: 'pointer',
-    borderColor: ep.current ? 'rgba(255, 45, 149, 0.4)' : 'var(--glass-border)',
-    background: ep.current ? 'rgba(255, 45, 149, 0.06)' : 'var(--glass-bg)',
-  }}>
-    {/* thumb */}
-    <div style={{
-      position: 'relative', width: 160, height: 90, flexShrink: 0, borderRadius: 8, overflow: 'hidden',
-      background: `linear-gradient(135deg, ${anime.palette[(ep.n - 1) % 3]}, ${anime.palette[(ep.n) % 3]})`,
+const EpisodeCard = ({ ep, anime, onClick }) => {
+  const { t } = useLang();
+  return (
+    <div onClick={onClick} className="glass" style={{
+      display: 'flex', gap: 14, padding: 14, borderRadius: 14, cursor: 'pointer',
+      borderColor: ep.current ? 'rgba(255, 45, 149, 0.4)' : 'var(--glass-border)',
+      background: ep.current ? 'rgba(255, 45, 149, 0.06)' : 'var(--glass-bg)',
     }}>
-      <div className="scanlines" style={{ position: 'absolute', inset: 0 }} />
-      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{
-          width: 36, height: 36, borderRadius: '50%',
-          background: 'rgba(0,0,0,0.5)', border: `1px solid ${anime.accent}`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
-          <Icon name="play" size={14} style={{ color: 'white' }} />
+      {/* thumb */}
+      <div style={{
+        position: 'relative', width: 160, height: 90, flexShrink: 0, borderRadius: 8, overflow: 'hidden',
+        background: `linear-gradient(135deg, ${anime.palette[(ep.n - 1) % 3]}, ${anime.palette[(ep.n) % 3]})`,
+      }}>
+        <div className="scanlines" style={{ position: 'absolute', inset: 0 }} />
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{
+            width: 36, height: 36, borderRadius: '50%',
+            background: 'rgba(0,0,0,0.5)', border: `1px solid ${anime.accent}`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <Icon name="play" size={14} style={{ color: 'white' }} />
+          </div>
+        </div>
+        <div className="font-mono" style={{ position: 'absolute', top: 4, left: 6, fontSize: 22, fontWeight: 700, color: 'white', textShadow: '0 0 8px rgba(0,0,0,0.8)', lineHeight: 1 }}>{String(ep.n).padStart(2, '0')}</div>
+        <div className="font-mono" style={{ position: 'absolute', bottom: 4, right: 6, fontSize: 10, color: 'white', background: 'rgba(0,0,0,0.6)', padding: '2px 6px', borderRadius: 4 }}>{ep.duration}</div>
+        {ep.current && (
+          <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 3, background: 'rgba(255,255,255,0.2)' }}>
+            <div style={{ width: '62%', height: '100%', background: 'var(--magenta)', boxShadow: '0 0 8px var(--magenta)' }} />
+          </div>
+        )}
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+          <span className="font-mono" style={{ fontSize: 10, color: anime.accent, letterSpacing: '0.15em' }}>
+            {t('epLabel')} {String(ep.n).padStart(2, '0')}
+          </span>
+          {ep.watched && !ep.current && <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 9, color: 'var(--ink-mute)', fontFamily: 'JetBrains Mono', letterSpacing: '0.1em' }}>
+            <Icon name="eye" size={10} /> {t('epWatched')}
+          </span>}
+          {ep.current && <span className="chip chip-hot" style={{ fontSize: 9, padding: '2px 6px' }}>{t('epCurrent')}</span>}
+        </div>
+        <div className="font-display" style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>{ep.title}</div>
+        <div style={{ fontSize: 12, color: 'var(--ink-mute)', lineHeight: 1.4, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+          {t('epDescriptionSample')}
         </div>
       </div>
-      <div className="font-mono" style={{ position: 'absolute', top: 4, left: 6, fontSize: 22, fontWeight: 700, color: 'white', textShadow: '0 0 8px rgba(0,0,0,0.8)', lineHeight: 1 }}>{String(ep.n).padStart(2, '0')}</div>
-      <div className="font-mono" style={{ position: 'absolute', bottom: 4, right: 6, fontSize: 10, color: 'white', background: 'rgba(0,0,0,0.6)', padding: '2px 6px', borderRadius: 4 }}>{ep.duration}</div>
-      {ep.current && (
-        <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 3, background: 'rgba(255,255,255,0.2)' }}>
-          <div style={{ width: '62%', height: '100%', background: 'var(--magenta)', boxShadow: '0 0 8px var(--magenta)' }} />
-        </div>
-      )}
     </div>
-    <div style={{ flex: 1, minWidth: 0 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-        <span className="font-mono" style={{ fontSize: 10, color: anime.accent, letterSpacing: '0.15em' }}>
-          ЕП {String(ep.n).padStart(2, '0')}
-        </span>
-        {ep.watched && !ep.current && <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 9, color: 'var(--ink-mute)', fontFamily: 'JetBrains Mono', letterSpacing: '0.1em' }}>
-          <Icon name="eye" size={10} /> ПЕРЕГЛЯНУТО
-        </span>}
-        {ep.current && <span className="chip chip-hot" style={{ fontSize: 9, padding: '2px 6px' }}>ЗАРАЗ</span>}
-      </div>
-      <div className="font-display" style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>{ep.title}</div>
-      <div style={{ fontSize: 12, color: 'var(--ink-mute)', lineHeight: 1.4, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-        Сон-у виявляє небезпечне підземелля та починає тренування з тіньовою системою. Битва триватиме всю ніч.
-      </div>
-    </div>
-  </div>
-);
+  );
+};
 
 const CastTab = ({ anime, mobile }) => {
+  const { t } = useLang();
   const cast = [
-    { name: 'Сон Чжін-У', va: 'Тосіхіко Сейкі', role: 'Головний', color: anime.palette[2] },
-    { name: 'Ча Хе-Ін', va: 'Рейна Уеда', role: 'Головна', color: '#ff66aa' },
-    { name: 'Цоїн Іксен', va: 'Бандай Хаято', role: 'Антагоніст', color: '#7928ca' },
-    { name: 'Сун Ман-Чан', va: 'Хіроюкі Йосіно', role: 'Підтримка', color: '#00d4aa' },
-    { name: 'Лі Чу-Хо', va: 'Хі Сато', role: 'Підтримка', color: '#ffce4a' },
-    { name: 'Хван Дон-Сук', va: 'Кодзі Юса', role: 'Підтримка', color: '#ff3344' },
+    { name: 'Сон Чжін-У', va: 'Тосіхіко Сейкі', role: t('castRoleMain'), color: anime.palette[2] },
+    { name: 'Ча Хе-Ін', va: 'Рейна Уеда', role: t('castRoleMainF'), color: '#ff66aa' },
+    { name: 'Цоїн Іксен', va: 'Бандай Хаято', role: t('castRoleAntagonist'), color: '#7928ca' },
+    { name: 'Сун Ман-Чан', va: 'Хіроюкі Йосіно', role: t('castRoleSupport'), color: '#00d4aa' },
+    { name: 'Лі Чу-Хо', va: 'Хі Сато', role: t('castRoleSupport'), color: '#ffce4a' },
+    { name: 'Хван Дон-Сук', va: 'Кодзі Юса', role: t('castRoleSupport'), color: '#ff3344' },
   ];
   return (
     <div style={{ display: 'grid', gridTemplateColumns: `repeat(${mobile ? 1 : 3}, 1fr)`, gap: 16 }}>
@@ -311,7 +316,7 @@ const CastTab = ({ anime, mobile }) => {
               {c.role.toUpperCase()}
             </div>
             <div className="font-display" style={{ fontSize: 15, fontWeight: 600 }}>{c.name}</div>
-            <div style={{ fontSize: 11, color: 'var(--ink-mute)', marginTop: 2 }}>озв. {c.va}</div>
+            <div style={{ fontSize: 11, color: 'var(--ink-mute)', marginTop: 2 }}>{t('castVoicePrefix')} {c.va}</div>
           </div>
         </div>
       ))}
@@ -320,6 +325,7 @@ const CastTab = ({ anime, mobile }) => {
 };
 
 const ReviewsTab = ({ anime, mobile }) => {
+  const { t } = useLang();
   const reviews = [
     { u: 'kira_ua', av: '#ff2d95', score: 10, time: '2 год тому', upvotes: 247,
       text: 'Найкраща анімація сезону. MAPPA нарешті зробила те, що від них чекали з 2022. Битва в 8 епізоді — це майстер-клас з режисури. Геніально.' },
@@ -334,7 +340,7 @@ const ReviewsTab = ({ anime, mobile }) => {
       <div className="glass" style={{ padding: mobile ? 20 : 28, borderRadius: 20, marginBottom: 28, display: 'grid', gridTemplateColumns: mobile ? '1fr' : '200px 1fr', gap: mobile ? 24 : 40, alignItems: 'center' }}>
         <div style={{ textAlign: 'center' }}>
           <div className="font-display gradient-text" style={{ fontSize: 80, fontWeight: 900, lineHeight: 1 }}>{anime.rating}</div>
-          <div className="font-mono" style={{ fontSize: 10, color: 'var(--ink-mute)', letterSpacing: '0.2em', marginTop: 4 }}>З 10 · 1,247 ОЦІНОК</div>
+          <div className="font-mono" style={{ fontSize: 10, color: 'var(--ink-mute)', letterSpacing: '0.2em', marginTop: 4 }}>{t('reviewsRatingsCount')}</div>
           <div style={{ display: 'flex', gap: 2, justifyContent: 'center', marginTop: 8, color: 'var(--gold)' }}>
             {[1, 2, 3, 4, 5].map(s => <span key={s}>★</span>)}
           </div>
@@ -372,7 +378,7 @@ const ReviewsTab = ({ anime, mobile }) => {
           <div style={{ display: 'flex', gap: 16, marginTop: 14, color: 'var(--ink-mute)', fontSize: 12, fontFamily: 'JetBrains Mono', letterSpacing: '0.1em' }}>
             <span>↑ {r.upvotes}</span>
             <span>↓</span>
-            <span>↩ ВІДПОВІСТИ</span>
+            <span>{t('reviewReply')}</span>
           </div>
         </div>
       ))}
@@ -381,6 +387,7 @@ const ReviewsTab = ({ anime, mobile }) => {
 };
 
 const CommentsTab = ({ anime }) => {
+  const { t } = useLang();
   const comments = [
     { u: 'midnight.shogun', av: '#ff2d95', time: '4 хв', text: 'еп 14 — ПЕРШЕ що я подивлюсь сьогодні. хто з мене зрозумів?' },
     { u: 'lain.exe', av: '#00f0ff', time: '12 хв', text: 'OST на 14 епізоді — chef\'s kiss. Хімено Macia вкотре витягує всю серію.' },
@@ -392,11 +399,11 @@ const CommentsTab = ({ anime }) => {
     <div>
       <div className="glass" style={{ padding: 18, borderRadius: 16, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 14 }}>
         <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg, var(--magenta), var(--violet))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 700 }}>Я</div>
-        <input placeholder="Напиши коментар…" style={{
+        <input placeholder={t('commentInputPlaceholder')} style={{
           flex: 1, background: 'rgba(255,255,255,0.04)', border: '1px solid var(--line-strong)',
           borderRadius: 100, padding: '12px 18px', color: 'white', outline: 'none', fontFamily: 'Manrope', fontSize: 13,
         }} />
-        <button className="btn btn-primary" style={{ padding: '10px 20px' }}>ЗАЛИШИТИ</button>
+        <button className="btn btn-primary" style={{ padding: '10px 20px' }}>{t('commentSubmitBtn')}</button>
       </div>
       {comments.map(c => (
         <div key={c.u} style={{ display: 'flex', gap: 14, padding: '14px 0', borderBottom: '1px solid var(--line)' }}>
@@ -409,7 +416,7 @@ const CommentsTab = ({ anime }) => {
             <p style={{ fontSize: 14, lineHeight: 1.5, color: 'rgba(255,255,255,0.85)', margin: 0 }}>{c.text}</p>
             <div style={{ display: 'flex', gap: 14, marginTop: 8, color: 'var(--ink-mute)', fontSize: 11, fontFamily: 'JetBrains Mono', letterSpacing: '0.1em' }}>
               <span>↑ 42</span>
-              <span>↩ ВІДПОВІСТИ</span>
+              <span>{t('reviewReply')}</span>
             </div>
           </div>
         </div>

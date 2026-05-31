@@ -3,6 +3,7 @@
 // ============================================================
 
 const PlayerPage = ({ animeId, setRoute, openAnime }) => {
+  const { t } = useLang();
   const a = getAnime(animeId || 'solo-leveling');
   const { mobile, tablet, pad } = useBP();
   const [playing, setPlaying] = useState(true);
@@ -42,7 +43,7 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
           background: 'transparent', border: 'none', color: 'var(--ink-dim)', cursor: 'pointer',
           fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.15em',
         }}>
-          <Icon name="arrow-left" size={14} /> ПОВЕРНУТИСЬ ДО {a.title.toUpperCase()}
+          <Icon name="arrow-left" size={14} /> {t('playerBackBtn')} {animeTitle(a).toUpperCase()}
         </button>
 
         <div style={{ display: 'grid', gridTemplateColumns: mobile || tablet ? '1fr' : '1fr 360px', gap: 24, alignItems: 'flex-start' }}>
@@ -177,7 +178,7 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
                   <div style={{ flex: 1 }} />
 
                   <span className="hide-mobile" style={{ fontSize: 11, color: 'white', opacity: 0.7, fontFamily: 'Manrope' }}>
-                    Далі: <span style={{ color: a.accent }}>Еп 15 · Битва за башню</span>
+                    {t('playerUpNext')} <span style={{ color: a.accent }}>Еп 15 · {t('playerEp15Title')}</span>
                   </span>
                   <button style={ctrlBtn} onClick={() => setShowSettings(!showSettings)}>
                     <Icon name="settings" size={18} />
@@ -192,10 +193,10 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
                     width: 280, borderRadius: 14, padding: 16,
                     background: 'rgba(10, 4, 22, 0.92)',
                   }}>
-                    <PopRow label="ЯКІСТЬ" value={quality} options={['4K', '1080p', '720p', '480p']} onChange={setQuality} accent={a.accent} />
-                    <PopRow label="ШВИДКІСТЬ" value="1.0x" options={['0.5x', '0.75x', '1.0x', '1.25x', '1.5x', '2.0x']} accent={a.accent} />
-                    <PopRow label="ДУБЛЯЖ" value="UA" options={['UA', 'JP+UA SUB', 'JP+EN SUB']} accent={a.accent} />
-                    <PopRow label="СУБТИТРИ" value="UA" options={['UA', 'EN', 'OFF']} accent={a.accent} />
+                    <PopRow label={t('playerQualityLabel')} value={quality} options={['4K', '1080p', '720p', '480p']} onChange={setQuality} accent={a.accent} />
+                    <PopRow label={t('playerSpeedLabel')} value="1.0x" options={['0.5x', '0.75x', '1.0x', '1.25x', '1.5x', '2.0x']} accent={a.accent} />
+                    <PopRow label={t('playerDubLabel')} value="UA" options={['UA', 'JP+UA SUB', 'JP+EN SUB']} accent={a.accent} />
+                    <PopRow label={t('playerSubtitlesLabel')} value="UA" options={['UA', 'EN', 'OFF']} accent={a.accent} />
                   </div>
                 )}
               </div>
@@ -205,32 +206,32 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
             <div className="glass" style={{ marginTop: 20, padding: mobile ? 18 : 24, borderRadius: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 12, flexWrap: 'wrap' }}>
                 <div className="font-mono" style={{ fontSize: mobile ? 10 : 11, color: a.accent, letterSpacing: '0.15em' }}>
-                  ▶ {a.titleEn.toUpperCase()} · СЕЗОН 2 · ЕП 14 / 25
+                  ▶ {a.titleEn.toUpperCase()} · {t('playerEpInfoSeason')} 2 · ЕП 14 / 25
                 </div>
-                <span className="chip chip-new" style={{ fontSize: 9 }}>● ЗАРАЗ</span>
+                <span className="chip chip-new" style={{ fontSize: 9 }}>{t('playerCurrentEp')}</span>
                 <div style={{ flex: 1 }} />
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                   <button className="btn-ghost btn" style={{ padding: '8px 14px', fontSize: 11 }}>
                     <Icon name="heart" size={14} /> 24.1K
                   </button>
                   <button className="btn-ghost btn" style={{ padding: '8px 14px', fontSize: 11 }}>
-                    <Icon name="plus" size={14} /> ЗБЕРЕГТИ
+                    <Icon name="plus" size={14} /> {t('playerSaveBtn')}
                   </button>
                   <button className="btn-ghost btn" style={{ padding: '8px 14px', fontSize: 11 }}>
-                    ПОДІЛИТИСЬ
+                    {t('playerShareBtn')}
                   </button>
                 </div>
               </div>
-              <h2 className="font-display" style={{ fontSize: 28, fontWeight: 700 }}>14 · Тіньовий монарх</h2>
+              <h2 className="font-display" style={{ fontSize: 28, fontWeight: 700 }}>{t('playerEp14Title')}</h2>
               <div className="font-jp" style={{ fontSize: 14, color: a.accent, opacity: 0.85, marginTop: 4 }}>影の君主</div>
               <p style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--ink-dim)', marginTop: 14, maxWidth: 800 }}>
-                Сон-у нарешті розкриває справжню силу системи. Хе-Ін отримує тривожне повідомлення з гільдії, поки в темних підземеллях прокидається те, що мало спати ще тисячу років.
+                {t('playerEp14Desc')}
               </p>
               <div style={{ display: 'flex', gap: 8, marginTop: 18 }}>
-                <span className="chip">Реж: Сін Хі-Со</span>
-                <span className="chip">Сценарій: Ко Хан-Сук</span>
+                <span className="chip">{t('playerChipDirector')}</span>
+                <span className="chip">{t('playerChipWriter')}</span>
                 <span className="chip">OST: Хімено Macia</span>
-                <span className="chip">24 хв</span>
+                <span className="chip">{t('playerChipDuration')}</span>
               </div>
             </div>
 
@@ -242,10 +243,10 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
           <aside style={mobile || tablet ? {} : { position: 'sticky', top: 100 }}>
             <div className="glass" style={{ borderRadius: 16, overflow: 'hidden' }}>
               <div style={{ padding: '18px 20px', borderBottom: '1px solid var(--line)' }}>
-                <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 6 }}>ПЛЕЙ-ЛИСТ · S02</div>
-                <div className="font-display" style={{ fontSize: 18, fontWeight: 600 }}>{a.title}</div>
+                <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 6 }}>{t('playerPlaylistLabel')}</div>
+                <div className="font-display" style={{ fontSize: 18, fontWeight: 600 }}>{animeTitle(a)}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8, fontSize: 11, color: 'var(--ink-mute)', fontFamily: 'JetBrains Mono' }}>
-                  <span>14 / 25 ПЕРЕГЛЯНУТО</span>
+                  <span>{t('playerPlaylistProgress')}</span>
                   <span style={{ flex: 1, height: 2, background: 'rgba(255,255,255,0.1)', borderRadius: 1, overflow: 'hidden' }}>
                     <span style={{ display: 'block', height: '100%', width: '56%', background: 'var(--magenta)' }} />
                   </span>
@@ -289,7 +290,7 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
 
             {/* up next */}
             <div className="glass" style={{ marginTop: 16, padding: 16, borderRadius: 14 }}>
-              <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 10 }}>ДАЛІ ▶</div>
+              <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 10 }}>{t('playerUpNextLabel')}</div>
               <div style={{ display: 'flex', gap: 12 }}>
                 <div style={{
                   width: 120, height: 70, borderRadius: 6, flexShrink: 0,
@@ -302,8 +303,8 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
                 </div>
                 <div>
                   <div className="font-mono" style={{ fontSize: 9, color: a.accent, letterSpacing: '0.15em' }}>ЕП 15</div>
-                  <div className="font-display" style={{ fontSize: 14, fontWeight: 600, marginTop: 4 }}>Битва за башню</div>
-                  <div className="font-mono" style={{ fontSize: 10, color: 'var(--ink-mute)', marginTop: 4 }}>АВТОГРА ЧЕРЕЗ 8с</div>
+                  <div className="font-display" style={{ fontSize: 14, fontWeight: 600, marginTop: 4 }}>{t('playerEp15Title')}</div>
+                  <div className="font-mono" style={{ fontSize: 10, color: 'var(--ink-mute)', marginTop: 4 }}>{t('playerAutoplayLabel')}</div>
                 </div>
               </div>
             </div>
@@ -338,6 +339,7 @@ const PopRow = ({ label, value, options = [], onChange, accent }) => (
 );
 
 const LiveChat = ({ anime }) => {
+  const { t } = useLang();
   const messages = [
     { u: 'kira_ua', av: '#ff2d95', text: 'нарешті 14 епізод!!! 😭', t: 'щойно' },
     { u: 'shadow.king', av: '#b026ff', text: 'озвучка цей раз просто 10/10', t: '12с' },
@@ -350,7 +352,7 @@ const LiveChat = ({ anime }) => {
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
         <div className="pulse-dot" />
         <div className="font-mono" style={{ fontSize: 11, color: 'var(--magenta)', letterSpacing: '0.2em' }}>
-          LIVE CHAT · 247 ОНЛАЙН
+          {t('liveChatLabel')}
         </div>
         <div style={{ flex: 1, height: 1, background: 'linear-gradient(to right, var(--magenta), transparent)' }} />
       </div>
@@ -366,7 +368,7 @@ const LiveChat = ({ anime }) => {
           </div>
         ))}
       </div>
-      <input placeholder="Напиши в чат…" style={{
+      <input placeholder={t('liveChatInputPlaceholder')} style={{
         width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid var(--line-strong)',
         borderRadius: 100, padding: '10px 16px', color: 'white', outline: 'none', fontFamily: 'Manrope', fontSize: 12,
       }} />

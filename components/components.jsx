@@ -3,6 +3,22 @@
 // ============================================================
 const { useState, useEffect, useRef, useMemo, useCallback } = React;
 
+const useLang = () => {
+  const [, rerender] = useState(0);
+  useEffect(() => {
+    const h = () => rerender(n => n + 1);
+    // langchange → оновлює t() рядки (синхронно)
+    // animemix-data-ready → оновлює window.ANIME (після async fetch)
+    window.addEventListener('langchange', h);
+    window.addEventListener('animemix-data-ready', h);
+    return () => {
+      window.removeEventListener('langchange', h);
+      window.removeEventListener('animemix-data-ready', h);
+    };
+  }, []);
+  return { t: window.t };
+};
+
 // --------- responsive viewport hook ---------
 function useVW() {
   const [vw, setVw] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280);
@@ -160,12 +176,12 @@ const CoverArt = ({ id, over, picker, open, zIndex = 1, radius = 0, hideUploadBt
           pointerEvents: 'none',
         }}>
           <span className="font-mono" style={{ fontSize: 11, color: 'white', letterSpacing: '0.15em',
-            background: 'rgba(0,0,0,0.5)', padding: '6px 12px', borderRadius: 100 }}>КИНЬ ФОТО ⬇</span>
+            background: 'rgba(0,0,0,0.5)', padding: '6px 12px', borderRadius: 100 }}>{t('coverDropLabel')}</span>
         </div>
       )}
       {picker}
       {!hideUploadBtn && open && (
-        <button onClick={open} title={url ? 'Замінити фото' : 'Додати фото'} className="cover-upload-btn" style={{
+        <button onClick={open} title={url ? t('coverUploadTitleReplace') : t('coverUploadTitleAdd')} className="cover-upload-btn" style={{
           position: 'absolute', left: 8, bottom: 8, zIndex: 9,
           width: 26, height: 26, borderRadius: 8,
           background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(8px)',
@@ -182,6 +198,7 @@ const CoverArt = ({ id, over, picker, open, zIndex = 1, radius = 0, hideUploadBt
 
 // --------- Cover (your poster, or designed neon placeholder) ---------
 const Cover = ({ anime, size = 'md', showInfo = false, onClick, idx = 0, fluid = false }) => {
+  useLang();
   const [hovered, setHovered] = useState(false);
   const coverUrl = useCover(anime.id);
   const [over, dropHandlers, picker, openPicker] = useDropCover(anime.id);
@@ -279,7 +296,7 @@ const Cover = ({ anime, size = 'md', showInfo = false, onClick, idx = 0, fluid =
         <div className="font-display" style={{
           fontSize: s.title, fontWeight: 700, color: 'white',
           lineHeight: 1.1, textShadow: '0 2px 12px rgba(0,0,0,0.8)',
-        }}>{anime.title}</div>
+        }}>{animeTitle(anime)}</div>
         {showInfo && (
           <div style={{ marginTop: 8, fontSize: 11, color: 'rgba(255,255,255,0.7)' }}>
             {anime.ep} еп · {anime.genres.slice(0, 2).join(' · ')}
@@ -311,17 +328,34 @@ const Cover = ({ anime, size = 'md', showInfo = false, onClick, idx = 0, fluid =
   );
 };
 
+// --------- LangToggle ---------
+const LangToggle = () => {
+  const [lang, setLangState] = useState(window.getLang());
+  useEffect(() => {
+    const h = (e) => setLangState(e.detail);
+    window.addEventListener('langchange', h);
+    return () => window.removeEventListener('langchange', h);
+  }, []);
+  const toggle = () => window.setLang(lang === 'uk' ? 'en' : 'uk');
+  return (
+    <button onClick={toggle} className="btn-ghost btn nav-link" style={{ padding: '6px 10px', fontFamily: 'JetBrains Mono, monospace', fontSize: 11, letterSpacing: '0.08em', minWidth: 52, justifyContent: 'center', textAlign: 'center' }}>
+      {lang === 'uk' ? 'EN' : 'UA'}
+    </button>
+  );
+};
+
 // --------- Top Nav ---------
-const NOTIFS = [
-  { id: 1, unread: true,  icon: 'sparkles', title: 'Новий епізод',      body: 'Dungeon Meshi — Епізод 24 вже доступний', time: '2 хв тому' },
-  { id: 2, unread: true,  icon: 'bell',     title: 'Симулкаст сьогодні', body: 'Solo Leveling S2 виходить о 18:00',       time: '1 год тому' },
-  { id: 3, unread: false, icon: 'heart',    title: 'Рекомендація',       body: 'Схоже тобі сподобається Frieren',          time: 'вчора' },
-  { id: 4, unread: false, icon: 'grid',     title: 'Оновлення каталогу', body: 'Додано 12 нових тайтлів сезону',           time: '2 дні тому' },
+const getNotifs = () => [
+  { id: 1, unread: true,  icon: 'sparkles', title: t('notif1Title'), body: t('notif1Body'), time: t('notif1Time') },
+  { id: 2, unread: true,  icon: 'bell',     title: t('notif2Title'), body: t('notif2Body'), time: t('notif2Time') },
+  { id: 3, unread: false, icon: 'heart',    title: t('notif3Title'), body: t('notif3Body'), time: t('notif3Time') },
+  { id: 4, unread: false, icon: 'grid',     title: t('notif4Title'), body: t('notif4Body'), time: t('notif4Time') },
 ];
 
 const NotifBell = () => {
+  useLang();
   const [open, setOpen] = useState(false);
-  const [notifs, setNotifs] = useState(NOTIFS);
+  const [notifs, setNotifs] = useState(getNotifs);
   const ref = useRef(null);
   const unreadCount = notifs.filter(n => n.unread).length;
 
@@ -356,7 +390,7 @@ const NotifBell = () => {
           {/* header */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px 10px' }}>
             <span className="font-display" style={{ fontSize: 13, fontWeight: 700 }}>
-              Сповіщення {unreadCount > 0 && (
+              {t('notifTitle')} {unreadCount > 0 && (
                 <span style={{ marginLeft: 6, padding: '2px 7px', borderRadius: 100, fontSize: 10,
                   background: 'rgba(255,45,149,0.2)', color: 'var(--magenta)', border: '1px solid rgba(255,45,149,0.3)' }}>
                   {unreadCount}
@@ -368,7 +402,7 @@ const NotifBell = () => {
                 background: 'none', border: 'none', cursor: 'pointer',
                 fontSize: 11, color: 'var(--ink-dim)', fontFamily: 'Manrope',
               }}>
-                Позначити всі прочитаними
+                {t('notifMarkAllRead')}
               </button>
             )}
           </div>
@@ -417,7 +451,7 @@ const NotifBell = () => {
               background: 'none', border: 'none', cursor: 'pointer',
               fontSize: 12, color: 'var(--violet-soft)', fontFamily: 'Manrope', fontWeight: 500,
             }}>
-              Всі сповіщення →
+              {t('notifViewAll')}
             </button>
           </div>
         </div>
@@ -427,6 +461,7 @@ const NotifBell = () => {
 };
 
 const TopNav = ({ route, setRoute, openSearch }) => {
+  useLang();
   const [scrolled, setScrolled] = useState(false);
   const { mobile, tablet, pad } = useBP();
   useEffect(() => {
@@ -436,10 +471,10 @@ const TopNav = ({ route, setRoute, openSearch }) => {
   }, []);
 
   const links = [
-    { id: 'home', label: 'Головна', icon: 'home' },
-    { id: 'catalog', label: 'Каталог', icon: 'grid' },
-    { id: 'simulcast', label: 'Сезон', icon: 'sparkles' },
-    { id: 'profile', label: 'Моє', icon: 'heart' },
+    { id: 'home', label: t('navHome'), icon: 'home' },
+    { id: 'catalog', label: t('navCatalog'), icon: 'grid' },
+    { id: 'simulcast', label: t('navSeason'), icon: 'sparkles' },
+    { id: 'profile', label: t('navMy'), icon: 'heart' },
   ];
 
   return (
@@ -502,11 +537,12 @@ const TopNav = ({ route, setRoute, openSearch }) => {
             fontFamily: 'Manrope', fontSize: 13, cursor: 'pointer',
           }}>
             <Icon name="search" size={16} />
-            <span style={{ flex: 1, textAlign: 'left' }}>{tablet ? 'Пошук…' : 'Шукай тайтл, жанр, студію…'}</span>
+            <span style={{ flex: 1, textAlign: 'left' }}>{tablet ? t('searchPlaceholderTablet') : t('searchPlaceholderDesktop')}</span>
             <span className="font-mono" style={{ fontSize: 10, padding: '2px 6px', border: '1px solid var(--line-strong)', borderRadius: 4 }}>⌘K</span>
           </button>
         )}
 
+        {!mobile && <LangToggle />}
         {!mobile && <NotifBell />}
 
         <button onClick={() => setRoute('profile')} style={{
@@ -522,10 +558,10 @@ const TopNav = ({ route, setRoute, openSearch }) => {
     {/* mobile bottom nav */}
     <nav className="bottom-nav">
       {[
-        { id: 'home', label: 'Головна', icon: 'home' },
-        { id: 'catalog', label: 'Каталог', icon: 'grid' },
-        { id: '__search', label: 'Пошук', icon: 'search' },
-        { id: 'profile', label: 'Моє', icon: 'user' },
+        { id: 'home', label: t('navHome'), icon: 'home' },
+        { id: 'catalog', label: t('navCatalog'), icon: 'grid' },
+        { id: '__search', label: t('searchPlaceholderTablet'), icon: 'search' },
+        { id: 'profile', label: t('navMy'), icon: 'user' },
       ].map(l => {
         const active = route === l.id;
         return (
@@ -584,7 +620,7 @@ const SearchPalette = ({ open, onClose, onPick }) => {
     const term = q.trim().toLowerCase();
     if (!term) return ANIME.slice(0, 6);
     return ANIME.filter(a =>
-      a.title.toLowerCase().includes(term) ||
+      animeTitle(a).toLowerCase().includes(term) ||
       a.titleEn.toLowerCase().includes(term) ||
       a.genres.join(' ').toLowerCase().includes(term)
     ).slice(0, 8);
@@ -608,7 +644,7 @@ const SearchPalette = ({ open, onClose, onPick }) => {
             ref={ref}
             value={q}
             onChange={e => setQ(e.target.value)}
-            placeholder="Назва, жанр, рік, студія…"
+            placeholder={t('searchPaletteInputPlaceholder')}
             style={{
               flex: 1, background: 'transparent', border: 'none', outline: 'none',
               color: 'white', fontSize: 16, fontFamily: 'Manrope',
@@ -618,7 +654,7 @@ const SearchPalette = ({ open, onClose, onPick }) => {
         </div>
         <div style={{ padding: 8, overflowY: 'auto' }}>
           <div className="font-mono" style={{ fontSize: 10, color: 'var(--ink-mute)', letterSpacing: '0.2em', padding: '8px 12px' }}>
-            {q ? `${results.length} РЕЗУЛЬТАТІВ` : 'ПОПУЛЯРНЕ ЗАРАЗ'}
+            {q ? `${results.length} ${t('searchResultsCount')}` : t('searchPopularNow')}
           </div>
           {results.map(a => (
             <button key={a.id} onClick={() => { onPick(a.id); onClose(); }} style={{
@@ -631,7 +667,7 @@ const SearchPalette = ({ open, onClose, onPick }) => {
               <div style={{ width: 48, height: 64, borderRadius: 6, overflow: 'hidden', flexShrink: 0,
                 background: `linear-gradient(135deg, ${a.palette[0]}, ${a.palette[1]}, ${a.palette[2]})` }} />
               <div style={{ flex: 1 }}>
-                <div className="font-display" style={{ fontSize: 14, fontWeight: 600 }}>{a.title}</div>
+                <div className="font-display" style={{ fontSize: 14, fontWeight: 600 }}>{animeTitle(a)}</div>
                 <div style={{ fontSize: 11, color: 'var(--ink-mute)', marginTop: 2 }}>
                   {a.year} · {a.genres.join(' · ')} · ★ {a.rating}
                 </div>
@@ -650,6 +686,7 @@ const SearchPalette = ({ open, onClose, onPick }) => {
 
 // --------- Footer ---------
 const Footer = () => {
+  useLang();
   const { mobile, tablet, pad } = useBP();
   return (
   <footer style={{ marginTop: mobile ? 60 : 120, padding: `${mobile ? 40 : 60}px ${pad}px 40px`, borderTop: '1px solid var(--line)' }}>
@@ -663,7 +700,7 @@ const Footer = () => {
           </div>
         </div>
         <p style={{ color: 'var(--ink-dim)', fontSize: 13, lineHeight: 1.6, maxWidth: 380 }}>
-          Найбільша бібліотека аніме українською. Симулкаст, дубляж, субтитри від спільноти. Без цензури, без обмежень, без реклами в плеєрі.
+          {t('footerTagline')}
         </p>
         <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
           <button className="btn-ghost btn" style={{ padding: 10 }}><Icon name="discord" size={16} /></button>
@@ -671,9 +708,9 @@ const Footer = () => {
         </div>
       </div>
       {[
-        { h: 'Платформа', l: ['Каталог', 'Симулкаст 2026', 'Топ-100', 'Останні релізи', 'Колекції'] },
-        { h: 'Спільнота', l: ['Форум', 'Discord', 'Перекладачі', 'Stand з нами', 'Донат'] },
-        { h: 'Юридичне', l: ['Умови', 'Приватність', 'DMCA', 'Контакти', 'Прес-кіт'] },
+        { h: t('footerColPlatform'), l: [t('footerLinkCatalog'), t('footerLinkSimulcast'), t('footerLinkTop100'), t('footerLinkLatest'), t('footerLinkCollections')] },
+        { h: t('footerColCommunity'), l: [t('footerLinkForum'), 'Discord', t('footerLinkTranslators'), t('footerLinkStand'), t('footerLinkDonate')] },
+        { h: t('footerColLegal'), l: [t('footerLinkTerms'), t('footerLinkPrivacy'), 'DMCA', t('footerLinkContacts'), t('footerLinkPressKit')] },
       ].map(col => (
         <div key={col.h}>
           <div className="font-mono" style={{ fontSize: 10, letterSpacing: '0.2em', color: 'var(--magenta)', marginBottom: 14 }}>{col.h.toUpperCase()}</div>
@@ -684,11 +721,11 @@ const Footer = () => {
       ))}
     </div>
     <div style={{ maxWidth: 1480, margin: '40px auto 0', paddingTop: 20, borderTop: '1px solid var(--line)', display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'space-between', color: 'var(--ink-mute)', fontSize: 11, fontFamily: 'JetBrains Mono' }}>
-      <span>© 2026 ANIMEMIX.UA · Зроблено з 愛 в Києві</span>
+      <span>{t('footerCopyright')}</span>
       <span>v 4.2.0 · BUILD 240312</span>
     </div>
   </footer>
   );
 };
 
-Object.assign(window, { Icon, Cover, CoverArt, useCover, useDropCover, writeCover, clearCover, useVW, useBP, TopNav, SectionHeader, SearchPalette, Footer });
+Object.assign(window, { Icon, Cover, CoverArt, useCover, useDropCover, writeCover, clearCover, useVW, useBP, TopNav, SectionHeader, SearchPalette, Footer, LangToggle, useLang });

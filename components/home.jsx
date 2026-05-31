@@ -4,6 +4,7 @@
 
 // dismissible banner teaching the drag-drop poster feature
 const DropHint = () => {
+  const { t } = useLang();
   const [show, setShow] = useState(() => localStorage.getItem('animemix_drophint_dismissed') !== '1');
   const { mobile } = useBP();
   if (!show) return null;
@@ -25,9 +26,9 @@ const DropHint = () => {
           <Icon name="plus" size={20} />
         </div>
         <div style={{ flex: 1 }}>
-          <div className="font-display" style={{ fontSize: 14, fontWeight: 600 }}>Додай свої постери</div>
+          <div className="font-display" style={{ fontSize: 14, fontWeight: 600 }}>{t('dropHintTitle')}</div>
           <div style={{ fontSize: 12, color: 'var(--ink-dim)', marginTop: 2 }}>
-            Перетягни фото на будь-яку картку (або тисни <Icon name="plus" size={11} style={{ verticalAlign: 'middle' }} /> у кутку) — воно з'явиться скрізь і збережеться.
+            {t('dropHintBody')}
           </div>
         </div>
         <button onClick={() => { localStorage.setItem('animemix_drophint_dismissed', '1'); setShow(false); }} style={{
@@ -40,6 +41,7 @@ const DropHint = () => {
 };
 
 const HomePage = ({ setRoute, openAnime }) => {
+  const { t } = useLang();
   const featured = ANIME.find(a => a.id === 'solo-leveling');
   const hotGrid = [
     ANIME.find(a => a.id === 'frieren'),
@@ -100,11 +102,11 @@ const HomePage = ({ setRoute, openAnime }) => {
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: mobile ? 28 : 40 }}>
             <div className="pulse-dot" />
             <span className="font-mono" style={{ fontSize: mobile ? 9 : 11, letterSpacing: '0.2em', color: 'var(--magenta)' }}>
-              {mobile ? 'LIVE · 2,847 ОНЛАЙН' : 'LIVE · 2,847 ГЛЯДАЧІВ ОНЛАЙН ЗАРАЗ'}
+              {mobile ? t('heroLiveOnlineMobile') : t('heroLiveOnline')}
             </span>
             <div style={{ flex: 1, height: 1, background: 'linear-gradient(to right, var(--magenta), transparent)' }} />
             {!mobile && <span className="font-mono" style={{ fontSize: 11, color: 'var(--ink-mute)', letterSpacing: '0.2em' }}>
-              СЕЗОН: ЗИМА 2026
+              {t('heroSeason')}
             </span>}
           </div>
 
@@ -112,34 +114,34 @@ const HomePage = ({ setRoute, openAnime }) => {
           <div style={{ display: 'grid', gridTemplateColumns: mobile || tablet ? '1fr' : '1fr 1fr', gap: mobile ? 36 : 60, alignItems: 'center', marginBottom: mobile ? 40 : 80 }}>
             <div>
               <div className="font-display" style={{ fontSize: 'clamp(58px, 13vw, 92px)', fontWeight: 900, lineHeight: 0.92, letterSpacing: '-0.04em' }}>
-                <div style={{ color: 'white' }}>АНІМЕ</div>
-                <div className="glitch glitch-live" data-text="БЕЗ" style={{ display: 'inline-block', position: 'relative' }}>
-                  <span className="gradient-text">БЕЗ</span>
+                <div style={{ color: 'white' }}>{t('heroHeadingLine1')}</div>
+                <div className="glitch glitch-live" data-text={t('heroHeadingLine2')} style={{ display: 'inline-block', position: 'relative' }}>
+                  <span className="gradient-text">{t('heroHeadingLine2')}</span>
                 </div>
-                <div style={{ color: 'white' }}>МЕЖ.</div>
+                <div style={{ color: 'white' }}>{t('heroHeadingLine3')}</div>
               </div>
               <div className="font-jp" style={{ fontSize: mobile ? 16 : 22, color: 'var(--violet-soft)', marginTop: 16, letterSpacing: '0.05em' }}>
-                境界のないアニメ · україномовний дубляж і саби
+                境界のないアニメ · {t('heroSubtitle')}
               </div>
               <p style={{ color: 'var(--ink-dim)', fontSize: mobile ? 15 : 17, lineHeight: 1.5, maxWidth: 480, marginTop: 24 }}>
-                3,847 тайтлів · 64,200 епізодів · симулкаст за <span style={{ color: 'var(--magenta)' }}>30 хвилин</span> після ефіру в Японії. Безкоштовно, без реклами в плеєрі, в 4K.
+                {t('heroDescription')}
               </p>
               <div style={{ display: 'flex', gap: 12, marginTop: mobile ? 28 : 36, flexWrap: 'wrap' }}>
                 <button onClick={() => openAnime(featured.id)} className="btn btn-primary" style={{ padding: '14px 28px', fontSize: 14 }}>
-                  <Icon name="play" size={16} /> Дивитись зараз
+                  <Icon name="play" size={16} /> {t('heroBtnWatch')}
                 </button>
                 <button onClick={() => setRoute('catalog')} className="btn btn-ghost" style={{ padding: '14px 28px', fontSize: 14 }}>
-                  <Icon name="grid" size={16} /> Каталог
+                  <Icon name="grid" size={16} /> {t('heroBtnCatalog')}
                 </button>
               </div>
 
               {/* stats row */}
               <div style={{ display: 'flex', gap: mobile ? 0 : 40, justifyContent: mobile ? 'space-between' : 'flex-start', marginTop: mobile ? 36 : 60, paddingTop: 28, borderTop: '1px solid var(--line)' }}>
                 {[
-                  { v: '3,847', l: 'ТАЙТЛІВ' },
-                  { v: '64.2K', l: 'ЕПІЗОДІВ' },
-                  { v: '128', l: 'СИМУЛКАСТ' },
-                  { v: '4K · HDR', l: 'ЯКІСТЬ' },
+                  { v: '3,847', l: t('statTitles') },
+                  { v: '64.2K', l: t('statEpisodes') },
+                  { v: '128', l: t('statSimulcast') },
+                  { v: '4K · HDR', l: t('statQuality') },
                 ].map(s => (
                   <div key={s.l}>
                     <div className="font-display gradient-text" style={{ fontSize: mobile ? 22 : 28, fontWeight: 800 }}>{s.v}</div>
@@ -164,7 +166,7 @@ const HomePage = ({ setRoute, openAnime }) => {
       {/* ========== TRENDING RAIL ========== */}
       <section style={{ padding: `${mobile ? 36 : 60}px ${pad}px`, position: 'relative' }}>
         <div style={{ maxWidth: 1480, margin: '0 auto' }}>
-          <SectionHeader kicker="ТОП ЦЬОГО ТИЖНЯ // TRENDING #001" title="Зараз дивляться всі" action="Весь топ" onAction={() => setRoute('catalog')} />
+          <SectionHeader kicker={t('trendingKicker')} title={t('trendingTitle')} action={t('trendingActionAll')} onAction={() => setRoute('catalog')} />
           <Rail items={trending.slice(0, 8)} onPick={openAnime} />
         </div>
       </section>
@@ -175,7 +177,7 @@ const HomePage = ({ setRoute, openAnime }) => {
       {/* ========== NEW THIS SEASON ========== */}
       <section style={{ padding: `${mobile ? 36 : 60}px ${pad}px` }}>
         <div style={{ maxWidth: 1480, margin: '0 auto' }}>
-          <SectionHeader kicker="СИМУЛКАСТ // SEASON-2026-WINTER" title="Новинки сезону" action="Розклад" onAction={() => setRoute('catalog')} />
+          <SectionHeader kicker={t('newSeasonKicker')} title={t('newSeasonTitle')} action={t('newSeasonAction')} onAction={() => setRoute('catalog')} />
           <Rail items={newReleases.concat(ANIME.slice(0, 4))} onPick={openAnime} />
         </div>
       </section>
@@ -186,7 +188,7 @@ const HomePage = ({ setRoute, openAnime }) => {
       {/* ========== ALL ========== */}
       <section style={{ padding: `${mobile ? 36 : 60}px ${pad}px` }}>
         <div style={{ maxWidth: 1480, margin: '0 auto' }}>
-          <SectionHeader kicker="БІБЛІОТЕКА // ALL TITLES" title="Каталог" action="Всі 3847 тайтлів" onAction={() => setRoute('catalog')} />
+          <SectionHeader kicker={t('libraryKicker')} title={t('libraryTitle')} action={t('libraryAction')} onAction={() => setRoute('catalog')} />
           <div style={{ display: 'grid', gridTemplateColumns: `repeat(${mobile ? 2 : tablet ? 4 : 6}, 1fr)`, gap: mobile ? 12 : 20 }}>
             {allTitles.slice(0, 12).map(a => (
               <Cover key={a.id} anime={a} size="md" fluid onClick={() => openAnime(a.id)} />
@@ -200,6 +202,7 @@ const HomePage = ({ setRoute, openAnime }) => {
 
 // ---------- HOT GRID (6 hero covers arranged) ----------
 const HotGrid = ({ items, onPick, mobile }) => {
+  const { t } = useLang();
   return (
     <div style={{
       position: 'relative',
@@ -214,7 +217,7 @@ const HotGrid = ({ items, onPick, mobile }) => {
         position: 'absolute', top: -20, left: 0,
         fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.2em',
         color: 'var(--magenta)',
-      }}>// HOT-06 // ОБРАНЕ РЕДАКЦІЇ</div>
+      }}>{t('hotGridLabel')}</div>
 
       {items.map((a, i) => (
         <HotCoverTile key={a.id} anime={a} onClick={() => onPick(a.id)} idx={i} />
@@ -224,6 +227,7 @@ const HotGrid = ({ items, onPick, mobile }) => {
 };
 
 const HotCoverTile = ({ anime, onClick, idx }) => {
+  useLang();
   const [hov, setHov] = useState(false);
   const [c1, c2, c3] = anime.palette;
   const coverUrl = useCover(anime.id);
@@ -293,7 +297,7 @@ const HotCoverTile = ({ anime, onClick, idx }) => {
           {anime.titleJp}
         </div>
         <div className="font-display" style={{ fontSize: 16, fontWeight: 700, color: 'white', lineHeight: 1.1 }}>
-          {anime.title}
+          {animeTitle(anime)}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8, fontSize: 10, color: 'rgba(255,255,255,0.7)' }}>
           <span style={{ color: 'var(--gold)' }}>★ {anime.rating}</span>
@@ -318,6 +322,7 @@ const HotCoverTile = ({ anime, onClick, idx }) => {
 
 // ---------- CONTINUE STRIP ----------
 const ContinueStrip = ({ onPick, setRoute, mobile }) => {
+  const { t } = useLang();
   return (
     <div className="glass" style={{
       padding: mobile ? 16 : 24, marginTop: 24,
@@ -336,13 +341,13 @@ const ContinueStrip = ({ onPick, setRoute, mobile }) => {
           </div>
           <div>
             <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em' }}>CONTINUE</div>
-            <div className="font-display" style={{ fontSize: 18, fontWeight: 600 }}>Дивитись далі</div>
+            <div className="font-display" style={{ fontSize: 18, fontWeight: 600 }}>{t('continueWatchingLabel')}</div>
           </div>
         </div>
         <button onClick={() => setRoute('profile')} style={{
           background: 'transparent', border: 'none', cursor: 'pointer',
           color: 'var(--violet-soft)', fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.1em',
-        }}>ВСЯ ІСТОРІЯ →</button>
+        }}>{t('continueHistoryAll')}</button>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: mobile ? 12 : 16 }}>
         {CONTINUE.map(c => {
@@ -381,9 +386,9 @@ const ContinueStrip = ({ onPick, setRoute, mobile }) => {
               </div>
               <div style={{ paddingTop: 10 }}>
                 <div className="font-mono" style={{ fontSize: 9, color: a.accent, letterSpacing: '0.15em', marginBottom: 2 }}>
-                  ЕП {c.episode}/{c.total} · {c.time}
+                  {t('continueEpProgress')} {c.episode}/{c.total} · {c.time}
                 </div>
-                <div className="font-display" style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.2 }}>{a.title}</div>
+                <div className="font-display" style={{ fontSize: 14, fontWeight: 600, lineHeight: 1.2 }}>{animeTitle(a)}</div>
               </div>
             </div>
           );
@@ -395,6 +400,7 @@ const ContinueStrip = ({ onPick, setRoute, mobile }) => {
 
 // ---------- FEATURED CINEMATIC ----------
 const FeaturedCinematic = ({ anime, onPlay, onOpen, mobile, pad }) => {
+  const { t } = useLang();
   return (
     <section style={{
       position: 'relative', margin: `40px ${pad || 32}px`, borderRadius: mobile ? 20 : 32, overflow: 'hidden',
@@ -437,10 +443,10 @@ const FeaturedCinematic = ({ anime, onPlay, onOpen, mobile, pad }) => {
 
       <div style={{ position: 'relative', padding: mobile ? 24 : 60, zIndex: 2, maxWidth: 680, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', minHeight: mobile ? 420 : 540 }}>
         <div className="font-mono" style={{ fontSize: mobile ? 9 : 11, color: anime.accent, letterSpacing: '0.25em', marginBottom: 16 }}>
-          ▶ ПРЕМ'ЄРА · СЕЗОН 2
+          {t('featuredPremiere')}
         </div>
         <div className="font-display" style={{ fontSize: 'clamp(36px, 8vw, 64px)', fontWeight: 800, lineHeight: 1, letterSpacing: '-0.03em', marginBottom: 8 }}>
-          {anime.title}
+          {animeTitle(anime)}
         </div>
         <div className="font-jp" style={{ fontSize: mobile ? 16 : 22, color: anime.accent, letterSpacing: '0.05em', marginBottom: 20, opacity: 0.9 }}>
           {anime.titleJp}
@@ -463,10 +469,10 @@ const FeaturedCinematic = ({ anime, onPlay, onOpen, mobile, pad }) => {
         </div>
         <div style={{ display: 'flex', gap: 12, marginBottom: mobile ? 0 : 32, flexWrap: 'wrap' }}>
           <button onClick={onPlay} className="btn btn-primary" style={{ padding: '14px 28px' }}>
-            <Icon name="play" size={16} /> Дивитись еп. 1
+            <Icon name="play" size={16} /> {t('featuredBtnWatch')}
           </button>
           <button onClick={onOpen} className="btn btn-ghost" style={{ padding: '14px 28px' }}>
-            Детальніше
+            {t('featuredBtnDetails')}
           </button>
           <button className="btn btn-ghost" style={{ padding: 14 }}>
             <Icon name="plus" size={16} />
@@ -520,18 +526,19 @@ const Rail = ({ items, onPick }) => {
 
 // ---------- Genre strip ----------
 const GenreStrip = ({ setRoute, mobile, tablet, pad }) => {
+  const { t } = useLang();
   const featured = [
-    { name: 'Темне фентезі', jp: 'ダーク', color: '#b026ff', count: 287 },
-    { name: 'Романтика', jp: 'ロマンス', color: '#ff2d95', count: 412 },
-    { name: 'Екшн', jp: 'アクション', color: '#ff007a', count: 891 },
-    { name: 'Ісекай', jp: '異世界', color: '#6b4dff', count: 198 },
-    { name: 'Психологія', jp: '心理', color: '#00f0ff', count: 76 },
-    { name: 'Меха', jp: 'メカ', color: '#c4ff3d', count: 154 },
+    { name: t('genreDarkFantasy'), jp: 'ダーク', color: '#b026ff', count: 287 },
+    { name: t('genreRomance'), jp: 'ロマンス', color: '#ff2d95', count: 412 },
+    { name: t('genreAction'), jp: 'アクション', color: '#ff007a', count: 891 },
+    { name: t('genreIsekai'), jp: '異世界', color: '#6b4dff', count: 198 },
+    { name: t('genrePsychology'), jp: '心理', color: '#00f0ff', count: 76 },
+    { name: t('genreMecha'), jp: 'メカ', color: '#c4ff3d', count: 154 },
   ];
   return (
     <section style={{ padding: `${mobile ? 36 : 60}px ${pad || 32}px` }}>
       <div style={{ maxWidth: 1480, margin: '0 auto' }}>
-        <SectionHeader kicker="ЖАНРИ // GENRE-INDEX" title="Що ти любиш?" action="Усі жанри" onAction={() => setRoute('catalog')} />
+        <SectionHeader kicker={t('genresKicker')} title={t('genresTitle')} action={t('genresActionAll')} onAction={() => setRoute('catalog')} />
         <div style={{ display: 'grid', gridTemplateColumns: `repeat(${mobile ? 2 : tablet ? 3 : 6}, 1fr)`, gap: mobile ? 10 : 14 }}>
           {featured.map(g => (
             <div key={g.name} onClick={() => setRoute('catalog')} style={{
@@ -555,7 +562,7 @@ const GenreStrip = ({ setRoute, mobile, tablet, pad }) => {
                 lineHeight: 1, userSelect: 'none', letterSpacing: '-0.05em',
               }}>{g.jp.slice(0, 1)}</div>
               <div className="font-mono" style={{ fontSize: 10, color: g.color, letterSpacing: '0.2em' }}>
-                {g.count} ТАЙТЛІВ
+                {g.count} {t('genreTitleCount')}
               </div>
               <div className="font-display" style={{ fontSize: 22, fontWeight: 700, marginTop: 12, position: 'relative' }}>
                 {g.name}
@@ -576,13 +583,14 @@ const GenreStrip = ({ setRoute, mobile, tablet, pad }) => {
 
 // ---------- Editors picks block (mosaic) ----------
 const EditorsBlock = ({ anime, onPick, mobile, pad }) => {
+  const { t } = useLang();
   const a1 = anime.find(a => a.id === 'vinland');
   const a2 = anime.find(a => a.id === 'aot');
   const a3 = anime.find(a => a.id === 'chainsaw');
   return (
     <section style={{ padding: `${mobile ? 36 : 60}px ${pad || 32}px` }}>
       <div style={{ maxWidth: 1480, margin: '0 auto' }}>
-        <SectionHeader kicker="ВИБІР РЕДАКЦІЇ // CURATED" title="Те, що варто подивитись" />
+        <SectionHeader kicker={t('editorsPicksKicker')} title={t('editorsPicksTitle')} />
         <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '2fr 1fr 1fr', gridTemplateRows: mobile ? 'none' : '420px', gap: mobile ? 12 : 18 }}>
           <BigTile anime={a1} onClick={() => onPick(a1.id)} mobile={mobile} />
           <BigTile anime={a2} onClick={() => onPick(a2.id)} compact mobile={mobile} />
@@ -594,6 +602,7 @@ const EditorsBlock = ({ anime, onPick, mobile, pad }) => {
 };
 
 const BigTile = ({ anime, onClick, compact = false, mobile }) => {
+  useLang();
   const [hov, setHov] = useState(false);
   const [c1, c2, c3] = anime.palette;
   return (
@@ -620,7 +629,7 @@ const BigTile = ({ anime, onClick, compact = false, mobile }) => {
           ▶ {anime.titleJp} · {anime.year}
         </div>
         <div className="font-display" style={{ fontSize: compact ? 26 : 44, fontWeight: 800, lineHeight: 1, marginBottom: 12 }}>
-          {anime.title}
+          {animeTitle(anime)}
         </div>
         {!compact && <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', maxWidth: 420, lineHeight: 1.5, marginBottom: 18 }}>
           {anime.synopsis}

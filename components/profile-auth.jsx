@@ -6,6 +6,7 @@
 // PROFILE
 // =================================================================
 const ProfilePage = ({ openAnime, setRoute }) => {
+  const { t } = useLang();
   const [tab, setTab] = useState('library');
   const { mobile, tablet, pad } = useBP();
 
@@ -51,36 +52,36 @@ const ProfilePage = ({ openAnime, setRoute }) => {
             </div>
             <div>
               <div className="font-mono" style={{ fontSize: 11, color: 'var(--magenta)', letterSpacing: '0.25em', marginBottom: 8 }}>
-                USER · #4827 · LEVEL 47 · OTAKU-RANK A
+                {t('profileUserMeta')}
               </div>
               <h1 className="font-display" style={{ fontSize: 'clamp(38px, 9vw, 56px)', fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 1 }}>
                 <span className="gradient-text">yana_kira</span>
               </h1>
               <div className="font-jp" style={{ fontSize: 16, color: 'var(--violet-soft)', marginTop: 6 }}>
-                やな・キラ · з нами з 11.2023 · 国: 🇺🇦
+                やな・キラ · {t('profileJoinDate')} · 国: 🇺🇦
               </div>
               <p style={{ color: 'var(--ink-dim)', fontSize: 13, marginTop: 12, maxWidth: 480 }}>
-                «Жанри: темне фентезі і слайс-оф-лайф. Завжди приймаю реки в DM. Зараз залипаю на Соло-левелінг ⚔️»
+                {t('profileUserBio')}
               </p>
               <div style={{ display: 'flex', gap: 8, marginTop: 14, flexWrap: 'wrap', justifyContent: mobile ? 'center' : 'flex-start' }}>
-                <span className="chip chip-hot">★ ТОП 5%</span>
-                <span className="chip chip-new">📺 247 ТАЙТЛІВ</span>
-                <span className="chip chip-dub">⌛ 4,128 ГОД</span>
-                <span className="chip">💬 1,247 ВІДГУКІВ</span>
+                <span className="chip chip-hot">{t('profileStatTop')}</span>
+                <span className="chip chip-new">{t('profileStatTitles')}</span>
+                <span className="chip chip-dub">{t('profileStatHours')}</span>
+                <span className="chip">{t('profileStatReviews')}</span>
               </div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               <button className="btn btn-ghost" style={{ padding: '10px 18px', fontSize: 11 }}>
-                <Icon name="settings" size={14} /> НАЛАШТУВАННЯ
+                <Icon name="settings" size={14} /> {t('profileBtnSettings')}
               </button>
               <button className="btn btn-ghost" style={{ padding: '10px 18px', fontSize: 11 }}>
-                ПОДІЛИТИСЬ ПРОФІЛЕМ
+                {t('profileBtnShare')}
               </button>
               <button onClick={() => setRoute('auth')} style={{
                 background: 'transparent', border: 'none', color: 'var(--ink-mute)', cursor: 'pointer',
                 fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.15em', padding: '8px 0',
               }}>
-                <Icon name="logout" size={11} /> ВИЙТИ
+                <Icon name="logout" size={11} /> {t('profileBtnLogout')}
               </button>
             </div>
           </div>
@@ -88,10 +89,10 @@ const ProfilePage = ({ openAnime, setRoute }) => {
 
         {/* STATS GRID */}
         <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: mobile ? 10 : 16, marginBottom: mobile ? 28 : 40 }}>
-          <BigStatCard label="ПЕРЕГЛЯНУТО" value="247" sub="тайтлів" jp="完了" color="var(--magenta)" />
-          <BigStatCard label="ЧАСУ ВКЛАДЕНО" value="4,128" sub="годин · 172 дні" jp="時間" color="var(--violet-soft)" />
-          <BigStatCard label="СЕРЕДНІЙ" value="8.4" sub="моя оцінка" jp="評価" color="var(--cyan)" />
-          <BigStatCard label="СТРИК" value="42" sub="дні поспіль" jp="連続" color="var(--lime)" />
+          <BigStatCard label={t('statCardWatched')} value="247" sub={t('statCardWatchedSub')} jp="完了" color="var(--magenta)" />
+          <BigStatCard label={t('statCardTime')} value="4,128" sub={t('statCardTimeSub')} jp="時間" color="var(--violet-soft)" />
+          <BigStatCard label={t('statCardAvg')} value="8.4" sub={t('statCardAvgSub')} jp="評価" color="var(--cyan)" />
+          <BigStatCard label={t('statCardStreak')} value="42" sub={t('statCardStreakSub')} jp="連続" color="var(--lime)" />
         </div>
 
         {/* TWO COL: lists + activity */}
@@ -100,32 +101,32 @@ const ProfilePage = ({ openAnime, setRoute }) => {
             {/* TAB NAV */}
             <div className="rail" style={{ display: 'flex', gap: 0, borderBottom: '1px solid var(--line)', marginBottom: 24, flexWrap: mobile ? 'nowrap' : 'wrap', overflowX: mobile ? 'auto' : 'visible' }}>
               {[
-                { v: 'library', l: 'Бібліотека', n: 247 },
-                { v: 'watching', l: 'Дивлюсь', n: lists.watching.length },
-                { v: 'completed', l: 'Завершено', n: lists.completed.length },
-                { v: 'plan', l: 'Заплановано', n: lists.plan.length },
-                { v: 'favorites', l: 'Улюблене', n: lists.favorites.length },
-                { v: 'stats', l: 'Статистика' },
-                { v: 'achievements', l: 'Досягнення' },
-              ].map(t => (
-                <button key={t.v} onClick={() => setTab(t.v)} style={{
+                { v: 'library', l: t('profileTabLibrary'), n: 247 },
+                { v: 'watching', l: t('profileTabWatching'), n: lists.watching.length },
+                { v: 'completed', l: t('profileTabCompleted'), n: lists.completed.length },
+                { v: 'plan', l: t('profileTabPlan'), n: lists.plan.length },
+                { v: 'favorites', l: t('profileTabFavorites'), n: lists.favorites.length },
+                { v: 'stats', l: t('profileTabStats') },
+                { v: 'achievements', l: t('profileTabAchievements') },
+              ].map(tabItem => (
+                <button key={tabItem.v} onClick={() => setTab(tabItem.v)} style={{
                   padding: '14px 16px', background: 'transparent', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
-                  color: tab === t.v ? 'white' : 'var(--ink-mute)',
-                  fontFamily: 'Unbounded', fontSize: 13, fontWeight: tab === t.v ? 600 : 400,
-                  borderBottom: tab === t.v ? '2px solid var(--magenta)' : '2px solid transparent',
+                  color: tab === tabItem.v ? 'white' : 'var(--ink-mute)',
+                  fontFamily: 'Unbounded', fontSize: 13, fontWeight: tab === tabItem.v ? 600 : 400,
+                  borderBottom: tab === tabItem.v ? '2px solid var(--magenta)' : '2px solid transparent',
                   marginBottom: -1, display: 'flex', alignItems: 'center', gap: 8,
-                }}>{t.l} {t.n != null && <span className="font-mono" style={{ fontSize: 10, color: tab === t.v ? 'var(--magenta)' : 'var(--ink-mute)' }}>{t.n}</span>}</button>
+                }}>{tabItem.l} {tabItem.n != null && <span className="font-mono" style={{ fontSize: 10, color: tab === tabItem.v ? 'var(--magenta)' : 'var(--ink-mute)' }}>{tabItem.n}</span>}</button>
               ))}
             </div>
 
             {tab === 'library' && (
               <div>
-                {Object.entries({
-                  'Зараз дивлюсь': lists.watching,
-                  'Завершено': lists.completed,
-                  'Заплановано': lists.plan,
-                  'Улюблене': lists.favorites,
-                }).map(([title, items]) => (
+                {[
+                  [t('libraryGroupWatching'), lists.watching],
+                  [t('libraryGroupCompleted'), lists.completed],
+                  [t('libraryGroupPlan'), lists.plan],
+                  [t('libraryGroupFavorites'), lists.favorites],
+                ].map(([title, items]) => (
                   <div key={title} style={{ marginBottom: 36 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
                       <h3 className="font-display" style={{ fontSize: 20, fontWeight: 600 }}>{title}</h3>
@@ -153,13 +154,13 @@ const ProfilePage = ({ openAnime, setRoute }) => {
           {/* RIGHT: activity feed */}
           <aside>
             <div className="glass" style={{ padding: 20, borderRadius: 16, marginBottom: 16 }}>
-              <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 14 }}>// АКТИВНІСТЬ</div>
+              <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 14 }}>{t('activitySectionLabel')}</div>
               {[
-                { t: 'Подивилась еп 14', a: ANIME[1], ago: '2 год тому', icon: 'play' },
-                { t: 'Оцінила 9/10', a: ANIME[0], ago: '5 год тому', icon: 'star' },
-                { t: 'Залишила відгук', a: ANIME[2], ago: '1 день тому', icon: 'list' },
-                { t: 'Додала у список', a: ANIME[5], ago: '2 дні тому', icon: 'plus' },
-                { t: 'Завершила', a: ANIME[7], ago: '3 дні тому', icon: 'check' },
+                { t: t('activityWatchedEp'), a: ANIME[1], ago: '2 год тому', icon: 'play' },
+                { t: t('activityRated'), a: ANIME[0], ago: '5 год тому', icon: 'star' },
+                { t: t('activityReviewed'), a: ANIME[2], ago: '1 день тому', icon: 'list' },
+                { t: t('activityAddedToList'), a: ANIME[5], ago: '2 дні тому', icon: 'plus' },
+                { t: t('activityCompleted'), a: ANIME[7], ago: '3 дні тому', icon: 'check' },
               ].map((act, i) => (
                 <div key={i} style={{ display: 'flex', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--line)' }}>
                   <div style={{
@@ -171,7 +172,7 @@ const ProfilePage = ({ openAnime, setRoute }) => {
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 12, color: 'var(--ink-dim)' }}>{act.t}</div>
-                    <div className="font-display" style={{ fontSize: 13, fontWeight: 600, color: 'white' }}>{act.a.title}</div>
+                    <div className="font-display" style={{ fontSize: 13, fontWeight: 600, color: 'white' }}>{animeTitle(act.a)}</div>
                     <div className="font-mono" style={{ fontSize: 9, color: 'var(--ink-mute)', marginTop: 2, letterSpacing: '0.1em' }}>{act.ago}</div>
                   </div>
                 </div>
@@ -179,7 +180,7 @@ const ProfilePage = ({ openAnime, setRoute }) => {
             </div>
 
             <div className="glass" style={{ padding: 20, borderRadius: 16 }}>
-              <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 14 }}>// ДРУЗІ ДИВЛЯТЬСЯ</div>
+              <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 14 }}>{t('friendsWatchingLabel')}</div>
               {[
                 { u: 'kuro.tanaka', a: 'Магічна битва', av: '#ff2d95' },
                 { u: 'rei.0', a: 'Данданан', av: '#00f0ff' },
@@ -215,21 +216,22 @@ const BigStatCard = ({ label, value, sub, jp, color }) => (
 );
 
 const StatsTab = ({ mobile }) => {
+  const { t } = useLang();
   // weekly chart
   const days = ['П', 'В', 'С', 'Ч', 'П', 'С', 'Н'];
   const heights = [40, 65, 30, 80, 92, 100, 70];
   const genres = [
-    { name: 'Екшн', pct: 32, color: '#ff2d95' },
-    { name: 'Драма', pct: 24, color: '#b026ff' },
-    { name: 'Фентезі', pct: 18, color: '#6b4dff' },
-    { name: 'Романтика', pct: 12, color: '#ff66aa' },
-    { name: 'Комедія', pct: 8, color: '#c4ff3d' },
-    { name: 'Інше', pct: 6, color: 'var(--ink-mute)' },
+    { name: t('statsGenreAction'), pct: 32, color: '#ff2d95' },
+    { name: t('statsGenreDrama'), pct: 24, color: '#b026ff' },
+    { name: t('statsGenreFantasy'), pct: 18, color: '#6b4dff' },
+    { name: t('statsGenreRomance'), pct: 12, color: '#ff66aa' },
+    { name: t('statsGenreComedy'), pct: 8, color: '#c4ff3d' },
+    { name: t('statsGenreOther'), pct: 6, color: 'var(--ink-mute)' },
   ];
   return (
     <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '1fr 1fr', gap: 20 }}>
       <div className="glass" style={{ padding: 24, borderRadius: 18 }}>
-        <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 18 }}>// ЦЬОГО ТИЖНЯ</div>
+        <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 18 }}>{t('statsWeekLabel')}</div>
         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-around', height: 180, padding: '0 8px' }}>
           {days.map((d, i) => (
             <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, flex: 1 }}>
@@ -246,7 +248,7 @@ const StatsTab = ({ mobile }) => {
         </div>
       </div>
       <div className="glass" style={{ padding: 24, borderRadius: 18 }}>
-        <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 18 }}>// УЛЮБЛЕНІ ЖАНРИ</div>
+        <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 18 }}>{t('statsGenresLabel')}</div>
         {genres.map(g => (
           <div key={g.name} style={{ marginBottom: 12 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 12 }}>
@@ -260,7 +262,7 @@ const StatsTab = ({ mobile }) => {
         ))}
       </div>
       <div className="glass" style={{ padding: 24, borderRadius: 18, gridColumn: mobile ? 'auto' : 'span 2' }}>
-        <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 18 }}>// АКТИВНІСТЬ ЗА РІК · 365 ДНІВ</div>
+        <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 18 }}>{t('statsYearLabel')}</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(53, 1fr)', gap: 3 }}>
           {Array.from({ length: 53 * 7 }, (_, i) => {
             const v = Math.random();
@@ -272,7 +274,7 @@ const StatsTab = ({ mobile }) => {
           })}
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 14, fontSize: 10, fontFamily: 'JetBrains Mono', color: 'var(--ink-mute)' }}>
-          <span>СІЧ</span><span>БЕР</span><span>ТРА</span><span>ЛИП</span><span>ВЕР</span><span>ЛИС</span>
+          <span>{t('statsMonthJan')}</span><span>{t('statsMonthMar')}</span><span>{t('statsMonthMay')}</span><span>{t('statsMonthJul')}</span><span>{t('statsMonthSep')}</span><span>{t('statsMonthNov')}</span>
         </div>
       </div>
     </div>
@@ -280,15 +282,16 @@ const StatsTab = ({ mobile }) => {
 };
 
 const AchievementsTab = ({ mobile }) => {
+  const { t } = useLang();
   const ach = [
-    { t: 'Перший крок', d: 'Подивитись 1 епізод', got: true, c: '#c4ff3d', jp: '一' },
-    { t: 'Марафонець', d: '24 години без зупинки', got: true, c: '#ff2d95', jp: '走' },
-    { t: 'Сотня', d: '100 завершених тайтлів', got: true, c: '#b026ff', jp: '百' },
-    { t: 'Критик', d: '50 відгуків', got: true, c: '#00f0ff', jp: '評' },
-    { t: 'Дегустатор', d: 'По 1 тайтлу у 20 жанрах', got: false, c: '#ffce4a', jp: '味' },
-    { t: 'Тисячник', d: '1000 завершених', got: false, c: '#ff007a', jp: '千' },
-    { t: 'Ніч-сова', d: 'Дивитись з 2 до 6 ранку 30 разів', got: true, c: '#6b4dff', jp: '夜' },
-    { t: 'Симулкаст-про', d: 'Подивитись 50 епізодів у день виходу', got: false, c: '#ff8a4c', jp: '即' },
+    { t: t('achTitle1'), d: t('achDesc1'), got: true, c: '#c4ff3d', jp: '一' },
+    { t: t('achTitle2'), d: t('achDesc2'), got: true, c: '#ff2d95', jp: '走' },
+    { t: t('achTitle3'), d: t('achDesc3'), got: true, c: '#b026ff', jp: '百' },
+    { t: t('achTitle4'), d: t('achDesc4'), got: true, c: '#00f0ff', jp: '評' },
+    { t: t('achTitle5'), d: t('achDesc5'), got: false, c: '#ffce4a', jp: '味' },
+    { t: t('achTitle6'), d: t('achDesc6'), got: false, c: '#ff007a', jp: '千' },
+    { t: t('achTitle7'), d: t('achDesc7'), got: true, c: '#6b4dff', jp: '夜' },
+    { t: t('achTitle8'), d: t('achDesc8'), got: false, c: '#ff8a4c', jp: '即' },
   ];
   return (
     <div style={{ display: 'grid', gridTemplateColumns: `repeat(${mobile ? 2 : 4}, 1fr)`, gap: mobile ? 12 : 16 }}>
@@ -308,7 +311,7 @@ const AchievementsTab = ({ mobile }) => {
           }}>{a.jp}</div>
           <div className="font-display" style={{ fontSize: 16, fontWeight: 700, marginTop: 14, position: 'relative' }}>{a.t}</div>
           <div style={{ fontSize: 11, color: 'var(--ink-dim)', marginTop: 4, position: 'relative' }}>{a.d}</div>
-          {a.got && <div className="font-mono" style={{ fontSize: 9, color: a.c, letterSpacing: '0.15em', marginTop: 10, position: 'relative' }}>✓ ОТРИМАНО</div>}
+          {a.got && <div className="font-mono" style={{ fontSize: 9, color: a.c, letterSpacing: '0.15em', marginTop: 10, position: 'relative' }}>{t('achObtained')}</div>}
         </div>
       ))}
     </div>
@@ -319,6 +322,7 @@ const AchievementsTab = ({ mobile }) => {
 // AUTH (login + register toggle)
 // =================================================================
 const AuthPage = ({ setRoute }) => {
+  const { t } = useLang();
   const [mode, setMode] = useState('login'); // login | signup
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
@@ -349,25 +353,25 @@ const AuthPage = ({ setRoute }) => {
           <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
             <Icon name="logo-mark" size={mobile ? 44 : 56} />
             <div className="font-mono" style={{ fontSize: mobile ? 9 : 11, color: 'var(--magenta)', letterSpacing: '0.25em', marginTop: mobile ? 24 : 40, marginBottom: 14 }}>
-              ▶ ANIMEMIX.UA · 2026 · аніме без меж
+              ▶ ANIMEMIX.UA · 2026 · {t('authArtTagline')}
             </div>
             <div className="font-display" style={{ fontSize: 'clamp(32px, 6vw, 56px)', fontWeight: 800, lineHeight: 0.95, letterSpacing: '-0.03em' }}>
-              Усе аніме<br />в <span className="gradient-text">одному місці.</span>
+              {t('authArtHeading')}
             </div>
             <div className="font-jp" style={{ fontSize: mobile ? 15 : 18, color: 'var(--violet-soft)', marginTop: 16 }}>
               全てのアニメ · 一つの場所
             </div>
             <p className="hide-mobile" style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14, lineHeight: 1.6, marginTop: 24, maxWidth: 380 }}>
-              3,847 тайтлів · 64,200 епізодів · симулкаст за 30 хвилин після ефіру в Японії. Безкоштовно, в 4K, з українським дубляжем.
+              {t('authArtDesc')}
             </p>
 
             <div style={{ flex: 1 }} />
 
             <div className="hide-mobile" style={{ display: 'flex', gap: 16, marginTop: 40, paddingTop: 28, borderTop: '1px solid var(--line)' }}>
               {[
-                { v: '184K', l: 'КОРИСТУВАЧІВ' },
-                { v: '4K · HDR', l: 'ЯКІСТЬ' },
-                { v: '24/7', l: 'СИМУЛКАСТ' },
+                { v: '184K', l: t('authStatUsers') },
+                { v: '4K · HDR', l: t('authStatQuality') },
+                { v: '24/7', l: t('authStatSimulcast') },
               ].map(s => (
                 <div key={s.l} style={{ flex: 1 }}>
                   <div className="font-display gradient-text" style={{ fontSize: 22, fontWeight: 800 }}>{s.v}</div>
@@ -381,13 +385,13 @@ const AuthPage = ({ setRoute }) => {
         {/* RIGHT: form */}
         <div>
           <div className="font-mono" style={{ fontSize: 11, color: 'var(--magenta)', letterSpacing: '0.3em', marginBottom: 12 }}>
-            // {mode === 'login' ? 'ВХІД · LOGIN' : 'РЕЄСТРАЦІЯ · SIGNUP'}
+            // {mode === 'login' ? t('authModeLogin') : t('authModeSignup')}
           </div>
           <h1 className="font-display" style={{ fontSize: 'clamp(36px, 8vw, 56px)', fontWeight: 800, lineHeight: 0.95, letterSpacing: '-0.02em' }}>
-            {mode === 'login' ? <>З поверненням, <span className="gradient-text">отаку.</span></> : <>Стань частиною <span className="gradient-text">світу.</span></>}
+            {mode === 'login' ? <>{t('authHeadingLogin')}</> : <>{t('authHeadingSignup')}</>}
           </h1>
           <p style={{ color: 'var(--ink-dim)', fontSize: 14, marginTop: 12 }}>
-            {mode === 'login' ? 'Увійди, щоб продовжити дивитись.' : 'Безкоштовно. Без реклами в плеєрі. Назавжди.'}
+            {mode === 'login' ? t('authSubLogin') : t('authSubSignup')}
           </p>
 
           {/* OAuth buttons */}
@@ -402,20 +406,20 @@ const AuthPage = ({ setRoute }) => {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '24px 0' }}>
             <div style={{ flex: 1, height: 1, background: 'var(--line)' }} />
-            <span className="font-mono" style={{ fontSize: 10, color: 'var(--ink-mute)', letterSpacing: '0.2em' }}>АБО EMAIL</span>
+            <span className="font-mono" style={{ fontSize: 10, color: 'var(--ink-mute)', letterSpacing: '0.2em' }}>{t('authDividerOr')}</span>
             <div style={{ flex: 1, height: 1, background: 'var(--line)' }} />
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {mode === 'signup' && (
-              <Field label="НІК · @username">
+              <Field label={t('authFieldNick')}>
                 <input value={name} onChange={e => setName(e.target.value)} placeholder="otaku_kira" style={inputCss} />
               </Field>
             )}
-            <Field label="EMAIL">
+            <Field label={t('authFieldEmail')}>
               <input value={email} onChange={e => setEmail(e.target.value)} placeholder="you@anime.ua" style={inputCss} />
             </Field>
-            <Field label="ПАРОЛЬ">
+            <Field label={t('authFieldPassword')}>
               <input value={pass} onChange={e => setPass(e.target.value)} type="password" placeholder="•••••••••" style={inputCss} />
               {mode === 'signup' && pass && <PasswordMeter pass={pass} />}
             </Field>
@@ -425,24 +429,25 @@ const AuthPage = ({ setRoute }) => {
                   <span style={{ width: 16, height: 16, borderRadius: 4, background: 'linear-gradient(135deg, var(--magenta), var(--violet))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Icon name="check" size={10} style={{ color: 'white' }} />
                   </span>
-                  Запам'ятати мене
+                  {t('authRememberMe')}
                 </label>
-                <a style={{ color: 'var(--violet-soft)', cursor: 'pointer' }}>Забув пароль?</a>
+                <a style={{ color: 'var(--violet-soft)', cursor: 'pointer' }}>{t('authForgotPassword')}</a>
               </div>
             )}
           </div>
 
           <button onClick={() => setRoute('home')} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', padding: '16px 28px', fontSize: 13, marginTop: 24 }}>
-            {mode === 'login' ? 'УВІЙТИ' : 'СТВОРИТИ АКАУНТ'} <Icon name="arrow-right" size={16} />
+            {mode === 'login' ? t('authBtnLogin') : t('authBtnSignup')} <Icon name="arrow-right" size={16} />
           </button>
 
           <div style={{ textAlign: 'center', marginTop: 20, fontSize: 13, color: 'var(--ink-dim)' }}>
-            {mode === 'login' ? <>Ще не з нами? <a onClick={() => setMode('signup')} style={{ color: 'var(--magenta)', cursor: 'pointer', fontWeight: 600 }}>Реєстрація →</a></>
-                              : <>Вже маєш акаунт? <a onClick={() => setMode('login')} style={{ color: 'var(--magenta)', cursor: 'pointer', fontWeight: 600 }}>Увійти →</a></>}
+            {mode === 'login'
+              ? <>{t('authSwitchToSignup')} <a onClick={() => setMode('signup')} style={{ color: 'var(--magenta)', cursor: 'pointer', fontWeight: 600 }}>{t('authSwitchToSignupLink')}</a></>
+              : <>{t('authSwitchToLogin')} <a onClick={() => setMode('login')} style={{ color: 'var(--magenta)', cursor: 'pointer', fontWeight: 600 }}>{t('authSwitchToLoginLink')}</a></>}
           </div>
 
           <div className="font-mono" style={{ fontSize: 9, color: 'var(--ink-mute)', letterSpacing: '0.15em', marginTop: 28, textAlign: 'center' }}>
-            ПРОДОВЖУЮЧИ, ТИ ПОГОДЖУЄШСЯ З УМОВАМИ ВИКОРИСТАННЯ ТА ПОЛІТИКОЮ ПРИВАТНОСТІ
+            {t('authTermsNotice')}
           </div>
         </div>
       </div>

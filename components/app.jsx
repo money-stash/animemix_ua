@@ -19,7 +19,37 @@ const ACCENT_OPTIONS = [
   ['#ffce4a', '#ff007a', '#b026ff'], // gold + neon
 ];
 
+function AppLoader() {
+  const [ready, setReady] = useState(window.__dataReady === true);
+  useEffect(() => {
+    if (window.__dataReady) return;
+    const h = () => setReady(true);
+    window.addEventListener('animemix-data-ready', h);
+    return () => window.removeEventListener('animemix-data-ready', h);
+  }, []);
+
+  if (!ready) return (
+    <div style={{
+      minHeight: '100vh', display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center',
+      background: 'var(--bg-0)', gap: 20,
+    }}>
+      <svg width="48" height="48" viewBox="0 0 32 32" fill="none" style={{ animation: 'spin-slow 1.5s linear infinite' }}>
+        <path d="M4 28L12 6h3l8 22h-4l-1.7-5h-8.6L7 28H4zm6.5-8h6L13.5 11l-3 9z" fill="url(#lg-load)"/>
+        <path d="M22 6h3v18l-3 4V6z" fill="url(#lg2-load)"/>
+        <defs>
+          <linearGradient id="lg-load" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#ff2d95"/><stop offset="1" stopColor="#b026ff"/></linearGradient>
+          <linearGradient id="lg2-load" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#b026ff"/><stop offset="1" stopColor="#00f0ff"/></linearGradient>
+        </defs>
+      </svg>
+      <div className="font-mono" style={{ fontSize: 11, letterSpacing: '0.2em', color: 'var(--ink-mute)' }}>ANIMEMIX…</div>
+    </div>
+  );
+  return <App />;
+}
+
 function App() {
+  const { t: tr } = useLang();
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
   const [route, setRoute] = useState('home');
   const [animeId, setAnimeId] = useState('solo-leveling');
@@ -83,34 +113,34 @@ function App() {
 
       {/* Tweaks panel */}
       <TweaksPanel title="Tweaks">
-        <TweakSection label="Кольори" />
-        <TweakColor label="Палітра"
+        <TweakSection label={tr('tweakSectionColors')} />
+        <TweakColor label={tr('tweakLabelPalette')}
           value={[t.accentColor, t.secondaryColor]}
           options={ACCENT_OPTIONS}
           onChange={(v) => setTweak({ accentColor: v[0], secondaryColor: v[1] })}
         />
-        <TweakSection label="Скло" />
-        <TweakSlider label="Розмиття" value={t.glassBlur} min={0} max={40} step={2} unit="px"
+        <TweakSection label={tr('tweakSectionGlass')} />
+        <TweakSlider label={tr('tweakLabelBlur')} value={t.glassBlur} min={0} max={40} step={2} unit="px"
           onChange={(v) => setTweak('glassBlur', v)} />
-        <TweakSection label="Деталі" />
-        <TweakToggle label="JP-текст" value={t.showJp} onChange={(v) => setTweak('showJp', v)} />
-        <TweakToggle label="Скан-лінії" value={t.scanlines} onChange={(v) => setTweak('scanlines', v)} />
-        <TweakRadio label="Щільність" value={t.density} options={['compact', 'regular', 'comfy']}
+        <TweakSection label={tr('tweakSectionDetails')} />
+        <TweakToggle label={tr('tweakLabelJpText')} value={t.showJp} onChange={(v) => setTweak('showJp', v)} />
+        <TweakToggle label={tr('tweakLabelScanlines')} value={t.scanlines} onChange={(v) => setTweak('scanlines', v)} />
+        <TweakRadio label={tr('tweakLabelDensity')} value={t.density} options={['compact', 'regular', 'comfy']}
           onChange={(v) => setTweak('density', v)} />
-        <TweakSection label="Сторінка" />
-        <TweakButton label="Скинути всі постери" onClick={() => {
+        <TweakSection label={tr('tweakSectionPage')} />
+        <TweakButton label={tr('tweakBtnResetCovers')} onClick={() => {
           localStorage.removeItem('animemix_covers_v1');
           location.reload();
         }} />
-        <TweakSelect label="Перейти на"
+        <TweakSelect label={tr('tweakSelectNavigate')}
           value={route}
           options={[
-            { value: 'home', label: 'Головна' },
-            { value: 'catalog', label: 'Каталог' },
-            { value: 'details', label: 'Тайтл' },
-            { value: 'player', label: 'Плеєр' },
-            { value: 'profile', label: 'Профіль' },
-            { value: 'auth', label: 'Вхід' },
+            { value: 'home', label: tr('tweakOptHome') },
+            { value: 'catalog', label: tr('tweakOptCatalog') },
+            { value: 'details', label: tr('tweakOptDetails') },
+            { value: 'player', label: tr('tweakOptPlayer') },
+            { value: 'profile', label: tr('tweakOptProfile') },
+            { value: 'auth', label: tr('tweakOptAuth') },
           ]}
           onChange={(v) => goTo(v)}
         />
@@ -126,4 +156,4 @@ function routeLabel(r) {
   })[r] || r;
 }
 
-ReactDOM.createRoot(document.getElementById('app')).render(<App />);
+ReactDOM.createRoot(document.getElementById('app')).render(<AppLoader />);

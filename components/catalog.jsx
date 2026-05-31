@@ -3,6 +3,7 @@
 // ============================================================
 
 const CatalogPage = ({ openAnime }) => {
+  const { t } = useLang();
   const [activeGenres, setActiveGenres] = useState(['Екшн']);
   const [sort, setSort] = useState('hot');
   const [year, setYear] = useState('all');
@@ -34,11 +35,11 @@ const CatalogPage = ({ openAnime }) => {
         {/* header */}
         <div style={{ marginBottom: mobile ? 24 : 40 }}>
           <div className="font-mono" style={{ fontSize: mobile ? 9 : 11, color: 'var(--magenta)', letterSpacing: '0.25em', marginBottom: 12 }}>
-            // КАТАЛОГ // 3,847 ТАЙТЛІВ
+            {t('catalogHeader')}
           </div>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
             <h1 className="font-display" style={{ fontSize: 'clamp(44px, 11vw, 72px)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 0.95 }}>
-              Все <span className="gradient-text">аніме.</span>
+              {t('catalogHeading')}
             </h1>
             <div className="font-jp hide-mobile" style={{ fontSize: 18, color: 'var(--violet-soft)', textAlign: 'right' }}>
               アーカイブ<br />
@@ -53,7 +54,7 @@ const CatalogPage = ({ openAnime }) => {
             width: '100%', justifyContent: 'center', padding: '14px', borderRadius: 12, marginBottom: 16,
             color: 'var(--magenta)', borderColor: 'rgba(255,45,149,0.4)',
           }}>
-            <Icon name="filter" size={16} /> Фільтри {activeGenres.length > 0 && `· ${activeGenres.length}`}
+            <Icon name="filter" size={16} /> {t('filtersBtnMobile')} {activeGenres.length > 0 && `· ${activeGenres.length}`}
           </button>
         )}
 
@@ -76,32 +77,47 @@ const CatalogPage = ({ openAnime }) => {
               <span style={{ flex: 1 }} />
               {mobile
                 ? <button onClick={() => setFiltersOpen(false)} style={{ background: 'transparent', border: 'none', color: 'var(--ink-dim)', cursor: 'pointer', fontSize: 16 }}>✕</button>
-                : <button style={{ background: 'transparent', border: 'none', color: 'var(--ink-mute)', cursor: 'pointer', fontSize: 10 }}>ОЧИСТИТИ</button>}
+                : <button style={{ background: 'transparent', border: 'none', color: 'var(--ink-mute)', cursor: 'pointer', fontSize: 10 }}>{t('filtersClear')}</button>}
             </div>
 
-            <FilterGroup label="ЖАНРИ">
+            <FilterGroup label={t('filterGroupGenres')}>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {GENRES.slice(0, 14).map(g => (
-                  <button key={g} onClick={() => toggleGenre(g)} className="chip" style={{
+                {[
+                  { v: 'Екшн',           l: t('genreListAction') },
+                  { v: 'Пригоди',        l: t('genreListAdventure') },
+                  { v: 'Комедія',        l: t('genreListComedy') },
+                  { v: 'Драма',          l: t('genreListDrama') },
+                  { v: 'Фентезі',        l: t('genreListFantasy') },
+                  { v: 'Жахи',           l: t('genreListHorror') },
+                  { v: 'Містерія',       l: t('genreListMystery') },
+                  { v: 'Школа',          l: t('genreListSchool') },
+                  { v: 'Спорт',          l: t('genreListSport') },
+                  { v: 'Надприродне',    l: t('genreListSupernatural') },
+                  { v: 'Темне фентезі', l: t('genreListDarkFantasy') },
+                  { v: 'Сейнен',         l: t('genreListSeinen') },
+                  { v: 'Сьонен',         l: t('genreListShonen') },
+                  { v: 'Слайс-оф-лайф', l: t('genreListSliceOfLife') },
+                ].map(({ v, l }) => (
+                  <button key={v} onClick={() => toggleGenre(v)} className="chip" style={{
                     cursor: 'pointer', fontFamily: 'Manrope', fontSize: 11, textTransform: 'none', letterSpacing: '0',
                     padding: '6px 12px',
-                    background: activeGenres.includes(g) ? 'rgba(255, 45, 149, 0.15)' : 'rgba(255,255,255,0.04)',
-                    borderColor: activeGenres.includes(g) ? 'rgba(255, 45, 149, 0.5)' : 'var(--glass-border)',
-                    color: activeGenres.includes(g) ? 'var(--magenta)' : 'var(--ink-dim)',
-                  }}>{g}</button>
+                    background: activeGenres.includes(v) ? 'rgba(255, 45, 149, 0.15)' : 'rgba(255,255,255,0.04)',
+                    borderColor: activeGenres.includes(v) ? 'rgba(255, 45, 149, 0.5)' : 'var(--glass-border)',
+                    color: activeGenres.includes(v) ? 'var(--magenta)' : 'var(--ink-dim)',
+                  }}>{l}</button>
                 ))}
               </div>
             </FilterGroup>
 
-            <FilterGroup label="СТАТУС">
+            <FilterGroup label={t('filterGroupStatus')}>
               <RadioRow value={status} onChange={setStatus} options={[
-                { v: 'all', l: 'Всі' },
-                { v: 'airing', l: 'Виходить' },
-                { v: 'completed', l: 'Завершено' },
+                { v: 'all',       l: t('filterStatusAll') },
+                { v: 'airing',    l: t('filterStatusAiring') },
+                { v: 'completed', l: t('filterStatusCompleted') },
               ]} />
             </FilterGroup>
 
-            <FilterGroup label="РІК">
+            <FilterGroup label={t('filterGroupYear')}>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {['all', ...YEARS].map(y => (
                   <button key={y} onClick={() => setYear(y)} style={{
@@ -110,12 +126,12 @@ const CatalogPage = ({ openAnime }) => {
                     border: year === y ? '1px solid rgba(255, 45, 149, 0.5)' : '1px solid var(--line)',
                     color: year === y ? 'var(--magenta)' : 'var(--ink-dim)',
                     fontFamily: 'JetBrains Mono', fontSize: 11, cursor: 'pointer',
-                  }}>{y === 'all' ? 'УСІ' : y}</button>
+                  }}>{y === 'all' ? t('filterYearAll') : y}</button>
                 ))}
               </div>
             </FilterGroup>
 
-            <FilterGroup label="ТРИВАЛІСТЬ">
+            <FilterGroup label={t('filterGroupDuration')}>
               <div style={{ padding: '8px 0' }}>
                 <div style={{ height: 4, background: 'rgba(255,255,255,0.05)', borderRadius: 2, position: 'relative' }}>
                   <div style={{ position: 'absolute', left: '15%', right: '40%', height: '100%', background: 'linear-gradient(to right, var(--magenta), var(--violet))', borderRadius: 2 }} />
@@ -123,14 +139,19 @@ const CatalogPage = ({ openAnime }) => {
                   <div style={{ position: 'absolute', left: '60%', top: -5, width: 14, height: 14, borderRadius: '50%', background: 'white', border: '2px solid var(--magenta)' }} />
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10, fontFamily: 'JetBrains Mono', fontSize: 10, color: 'var(--ink-mute)' }}>
-                  <span>12 ЕП</span><span>52+ ЕП</span>
+                  <span>{t('filterDurationMin')}</span><span>{t('filterDurationMax')}</span>
                 </div>
               </div>
             </FilterGroup>
 
-            <FilterGroup label="ОЗВУЧЕННЯ">
+            <FilterGroup label={t('filterGroupVoice')}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {['Український дубляж', 'Українські саби', 'Багатоголосе', 'Оригінал + саби'].map((l, i) => (
+                {[
+                  t('filterVoiceUaDub'),
+                  t('filterVoiceUaSub'),
+                  t('filterVoiceMulti'),
+                  t('filterVoiceOrigSub'),
+                ].map((l, i) => (
                   <label key={l} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 12, color: 'var(--ink-dim)', cursor: 'pointer' }}>
                     <span style={{
                       width: 16, height: 16, borderRadius: 4,
@@ -146,7 +167,7 @@ const CatalogPage = ({ openAnime }) => {
               </div>
             </FilterGroup>
 
-            <FilterGroup label="ВІК">
+            <FilterGroup label={t('filterGroupAge')}>
               <div style={{ display: 'flex', gap: 6 }}>
                 {['0+', '12+', '16+', '18+'].map(a => (
                   <button key={a} style={{
@@ -166,16 +187,16 @@ const CatalogPage = ({ openAnime }) => {
             {/* toolbar */}
             <div className="glass" style={{ display: 'flex', alignItems: 'center', gap: mobile ? 8 : 16, padding: mobile ? '10px 14px' : '12px 20px', borderRadius: 14, marginBottom: 20, flexWrap: 'wrap' }}>
               <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: 'var(--ink-dim)' }}>
-                ЗНАЙДЕНО <span className="neon-text-magenta">{filtered.length}</span>
+                {t('toolbarFound')} <span className="neon-text-magenta">{filtered.length}</span>
               </div>
               <div style={{ flex: 1 }} />
               <div style={{ display: 'flex', alignItems: 'center', gap: mobile ? 4 : 8, overflowX: 'auto' }} className="rail">
-                {!mobile && <span style={{ fontSize: 11, color: 'var(--ink-mute)', fontFamily: 'JetBrains Mono', letterSpacing: '0.1em' }}>СОРТУВАННЯ:</span>}
+                {!mobile && <span style={{ fontSize: 11, color: 'var(--ink-mute)', fontFamily: 'JetBrains Mono', letterSpacing: '0.1em' }}>{t('toolbarSortLabel')}</span>}
                 {[
-                  { v: 'hot', l: 'Гарячі' },
-                  { v: 'rating', l: 'Рейтинг' },
-                  { v: 'year', l: 'Рік' },
-                  { v: 'name', l: 'Назва' },
+                  { v: 'hot',    l: t('sortHot') },
+                  { v: 'rating', l: t('sortRating') },
+                  { v: 'year',   l: t('sortYear') },
+                  { v: 'name',   l: t('sortName') },
                 ].map(o => (
                   <button key={o.v} onClick={() => setSort(o.v)} style={{
                     padding: '6px 12px', borderRadius: 100, fontSize: 12, whiteSpace: 'nowrap',
@@ -277,7 +298,7 @@ const RadioRow = ({ value, onChange, options }) => (
   </div>
 );
 
-const ListRow = ({ anime, onClick, idx }) => (
+const ListRow = ({ anime, onClick, idx }) => { useLang(); return (
   <div onClick={onClick} className="glass" style={{
     display: 'flex', alignItems: 'center', gap: 18, padding: 14, borderRadius: 14, cursor: 'pointer',
     transition: 'border-color 0.2s',
@@ -294,7 +315,7 @@ const ListRow = ({ anime, onClick, idx }) => (
       <div className="font-display" style={{ position: 'absolute', right: -6, top: -8, fontSize: 70, fontWeight: 900, color: 'rgba(0,0,0,0.2)', lineHeight: 1 }}>{anime.titleJp.slice(0, 1)}</div>
     </div>
     <div style={{ flex: 1 }}>
-      <div className="font-display" style={{ fontSize: 17, fontWeight: 600 }}>{anime.title}</div>
+      <div className="font-display" style={{ fontSize: 17, fontWeight: 600 }}>{animeTitle(anime)}</div>
       <div className="font-mono" style={{ fontSize: 10, color: 'var(--ink-mute)', marginTop: 4, letterSpacing: '0.1em' }}>
         {anime.titleJp} · {anime.titleEn}
       </div>
@@ -310,6 +331,6 @@ const ListRow = ({ anime, onClick, idx }) => (
       <Icon name="chevron-right" size={18} />
     </div>
   </div>
-);
+); };
 
 Object.assign(window, { CatalogPage });
