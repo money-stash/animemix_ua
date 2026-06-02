@@ -1,8 +1,3 @@
-// ============================================================
-// ANIMEMIX — Home page (hero grid + rails)
-// ============================================================
-
-// dismissible banner teaching the drag-drop poster feature
 const DropHint = () => {
   const { t } = useLang();
   const [show, setShow] = useState(() => localStorage.getItem('animemix_drophint_dismissed') !== '1');
@@ -56,7 +51,6 @@ const HomePage = ({ setRoute, openAnime }) => {
   const allTitles = ANIME;
   const { mobile, tablet, pad } = useBP();
 
-  // parallax tilt for featured
   const heroRef = useRef(null);
   useEffect(() => {
     const el = heroRef.current;
@@ -75,12 +69,12 @@ const HomePage = ({ setRoute, openAnime }) => {
   return (
     <div className="page-enter">
       <DropHint />
-      {/* ========== HERO ========== */}
+      {}
       <section ref={heroRef} style={{
         position: 'relative', padding: `${mobile ? 96 : 120}px ${pad}px ${mobile ? 40 : 60}px`,
         minHeight: mobile ? 'auto' : '100vh',
       }}>
-        {/* big background art for featured */}
+        {}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden',
         }}>
@@ -93,12 +87,12 @@ const HomePage = ({ setRoute, openAnime }) => {
             transform: `translate(calc(var(--mx, 0) * -20px), calc(var(--my, 0) * -20px))`,
             transition: 'transform 0.3s',
           }} />
-          {/* grid bg */}
+          {}
           <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: 0.4 }} />
         </div>
 
         <div style={{ maxWidth: 1480, margin: '0 auto', position: 'relative', zIndex: 2 }}>
-          {/* tagline strip */}
+          {}
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: mobile ? 28 : 40 }}>
             <div className="pulse-dot" />
             <span className="font-mono" style={{ fontSize: mobile ? 9 : 11, letterSpacing: '0.2em', color: 'var(--magenta)' }}>
@@ -110,7 +104,7 @@ const HomePage = ({ setRoute, openAnime }) => {
             </span>}
           </div>
 
-          {/* hero headline */}
+          {}
           <div style={{ display: 'grid', gridTemplateColumns: mobile || tablet ? '1fr' : '1fr 1fr', gap: mobile ? 36 : 60, alignItems: 'center', marginBottom: mobile ? 40 : 80 }}>
             <div>
               <div className="font-display" style={{ fontSize: 'clamp(58px, 13vw, 92px)', fontWeight: 900, lineHeight: 0.92, letterSpacing: '-0.04em' }}>
@@ -135,7 +129,7 @@ const HomePage = ({ setRoute, openAnime }) => {
                 </button>
               </div>
 
-              {/* stats row */}
+              {}
               <div style={{ display: 'flex', gap: mobile ? 0 : 40, justifyContent: mobile ? 'space-between' : 'flex-start', marginTop: mobile ? 36 : 60, paddingTop: 28, borderTop: '1px solid var(--line)' }}>
                 {[
                   { v: '3,847', l: t('statTitles') },
@@ -151,19 +145,19 @@ const HomePage = ({ setRoute, openAnime }) => {
               </div>
             </div>
 
-            {/* hot grid — 6 covers in a designed grid */}
+            {}
             <HotGrid items={hotGrid} onPick={openAnime} mobile={mobile} />
           </div>
 
-          {/* ========== CONTINUE WATCHING STRIP ========== */}
+          {}
           <ContinueStrip onPick={openAnime} setRoute={setRoute} mobile={mobile} />
         </div>
       </section>
 
-      {/* ========== FEATURED CINEMATIC ========== */}
+      {}
       <FeaturedCinematic anime={featured} onPlay={() => setRoute('player')} onOpen={() => openAnime(featured.id)} mobile={mobile} pad={pad} />
 
-      {/* ========== TRENDING RAIL ========== */}
+      {}
       <section style={{ padding: `${mobile ? 36 : 60}px ${pad}px`, position: 'relative' }}>
         <div style={{ maxWidth: 1480, margin: '0 auto' }}>
           <SectionHeader kicker={t('trendingKicker')} title={t('trendingTitle')} action={t('trendingActionAll')} onAction={() => setRoute('catalog')} />
@@ -171,10 +165,10 @@ const HomePage = ({ setRoute, openAnime }) => {
         </div>
       </section>
 
-      {/* ========== GENRE STRIP ========== */}
+      {}
       <GenreStrip setRoute={setRoute} mobile={mobile} tablet={tablet} pad={pad} />
 
-      {/* ========== NEW THIS SEASON ========== */}
+      {}
       <section style={{ padding: `${mobile ? 36 : 60}px ${pad}px` }}>
         <div style={{ maxWidth: 1480, margin: '0 auto' }}>
           <SectionHeader kicker={t('newSeasonKicker')} title={t('newSeasonTitle')} action={t('newSeasonAction')} onAction={() => setRoute('catalog')} />
@@ -182,10 +176,10 @@ const HomePage = ({ setRoute, openAnime }) => {
         </div>
       </section>
 
-      {/* ========== EDITORS PICKS BIG TILES ========== */}
+      {}
       <EditorsBlock anime={ANIME} onPick={openAnime} mobile={mobile} pad={pad} />
 
-      {/* ========== ALL ========== */}
+      {}
       <section style={{ padding: `${mobile ? 36 : 60}px ${pad}px` }}>
         <div style={{ maxWidth: 1480, margin: '0 auto' }}>
           <SectionHeader kicker={t('libraryKicker')} title={t('libraryTitle')} action={t('libraryAction')} onAction={() => setRoute('catalog')} />
@@ -200,7 +194,6 @@ const HomePage = ({ setRoute, openAnime }) => {
   );
 };
 
-// ---------- HOT GRID (6 hero covers arranged) ----------
 const HotGrid = ({ items, onPick, mobile }) => {
   const { t } = useLang();
   return (
@@ -212,7 +205,7 @@ const HotGrid = ({ items, onPick, mobile }) => {
       gap: mobile ? 8 : 12,
       marginTop: mobile ? 24 : 0,
     }}>
-      {/* corner labels */}
+      {}
       <div style={{
         position: 'absolute', top: -20, left: 0,
         fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.2em',
@@ -248,19 +241,19 @@ const HotCoverTile = ({ anime, onClick, idx }) => {
         transition: 'all 0.4s cubic-bezier(.2,.9,.3,1.2)',
       }}
     >
-      {/* radial */}
+      {}
       <div style={{
         position: 'absolute', inset: 0,
         background: `radial-gradient(ellipse at 60% 20%, ${c3}99 0%, transparent 60%)`,
       }} />
       <CoverArt id={anime.id} over={over} picker={picker} open={openPicker} zIndex={1} radius={16} />
-      {/* halftone */}
+      {}
       {!coverUrl && <div style={{
         position: 'absolute', inset: 0,
         backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 1.5px)`,
         backgroundSize: '6px 6px', mixBlendMode: 'overlay',
       }} />}
-      {/* huge kanji */}
+      {}
       {!coverUrl && <div className="font-display" style={{
         position: 'absolute', right: -8, top: -16,
         fontSize: 160, fontWeight: 900,
@@ -268,14 +261,14 @@ const HotCoverTile = ({ anime, onClick, idx }) => {
         lineHeight: 1, userSelect: 'none', letterSpacing: '-0.08em',
       }}>{anime.titleJp.slice(0, 1)}</div>}
 
-      {/* scanlines */}
+      {}
       <div style={{
         position: 'absolute', inset: 0,
         background: 'repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(0,0,0,0.18) 2px, rgba(0,0,0,0.18) 3px)',
         opacity: 0.7, pointerEvents: 'none',
       }} />
 
-      {/* rank */}
+      {}
       <div style={{
         position: 'absolute', top: 12, left: 12, zIndex: 5,
         display: 'flex', alignItems: 'center', gap: 6,
@@ -287,7 +280,7 @@ const HotCoverTile = ({ anime, onClick, idx }) => {
         }}>#{String(idx + 1).padStart(2, '0')}</div>
       </div>
 
-      {/* bottom */}
+      {}
       <div style={{
         position: 'absolute', left: 0, right: 0, bottom: 0, zIndex: 5,
         padding: 16,
@@ -306,7 +299,7 @@ const HotCoverTile = ({ anime, onClick, idx }) => {
         </div>
       </div>
 
-      {/* hover scanline sweep */}
+      {}
       {hov && (
         <div style={{
           position: 'absolute', left: 0, right: 0, top: 0,
@@ -320,7 +313,6 @@ const HotCoverTile = ({ anime, onClick, idx }) => {
   );
 };
 
-// ---------- CONTINUE STRIP ----------
 const ContinueStrip = ({ onPick, setRoute, mobile }) => {
   const { t } = useLang();
   return (
@@ -379,7 +371,7 @@ const ContinueStrip = ({ onPick, setRoute, mobile }) => {
                     <Icon name="play" size={16} style={{ color: 'white', marginLeft: 2 }} />
                   </div>
                 </div>
-                {/* progress bar */}
+                {}
                 <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 3, background: 'rgba(255,255,255,0.15)' }}>
                   <div style={{ height: '100%', width: `${c.progress * 100}%`, background: `linear-gradient(to right, ${a.accent}, var(--magenta))`, boxShadow: `0 0 8px ${a.accent}` }} />
                 </div>
@@ -398,7 +390,6 @@ const ContinueStrip = ({ onPick, setRoute, mobile }) => {
   );
 };
 
-// ---------- FEATURED CINEMATIC ----------
 const FeaturedCinematic = ({ anime, onPlay, onOpen, mobile, pad }) => {
   const { t } = useLang();
   return (
@@ -407,7 +398,7 @@ const FeaturedCinematic = ({ anime, onPlay, onOpen, mobile, pad }) => {
       minHeight: mobile ? 420 : 540,
       border: '1px solid rgba(255,45,149,0.2)',
     }}>
-      {/* big bg */}
+      {}
       <div style={{
         position: 'absolute', inset: 0,
         background: `
@@ -416,16 +407,16 @@ const FeaturedCinematic = ({ anime, onPlay, onOpen, mobile, pad }) => {
           linear-gradient(135deg, ${anime.palette[0]} 0%, ${anime.palette[1]} 100%)
         `,
       }} />
-      {/* halftone */}
+      {}
       <div style={{
         position: 'absolute', inset: 0,
         backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.1) 1px, transparent 1.5px)`,
         backgroundSize: '12px 12px', mixBlendMode: 'overlay',
       }} />
-      {/* scanlines */}
+      {}
       <div className="scanlines" style={{ position: 'absolute', inset: 0 }} />
 
-      {/* huge jp */}
+      {}
       <div className="font-display" style={{
         position: 'absolute', right: -20, top: -30,
         fontSize: 480, fontWeight: 900,
@@ -433,7 +424,7 @@ const FeaturedCinematic = ({ anime, onPlay, onOpen, mobile, pad }) => {
         lineHeight: 0.8, userSelect: 'none', letterSpacing: '-0.08em',
       }}>{anime.titleJp.slice(0, 1)}</div>
 
-      {/* dark vignette */}
+      {}
       <div style={{
         position: 'absolute', inset: 0,
         background: mobile
@@ -479,13 +470,13 @@ const FeaturedCinematic = ({ anime, onPlay, onOpen, mobile, pad }) => {
           </button>
         </div>
 
-        {/* genre row */}
+        {}
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           {animeGenres(anime).map(g => <span key={g} className="chip">{g}</span>)}
         </div>
       </div>
 
-      {/* corner readout */}
+      {}
       <div className="font-mono hide-mobile" style={{
         position: 'absolute', top: 24, right: 24, zIndex: 3,
         fontSize: 10, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.15em',
@@ -499,7 +490,6 @@ const FeaturedCinematic = ({ anime, onPlay, onOpen, mobile, pad }) => {
   );
 };
 
-// ---------- Rail ----------
 const Rail = ({ items, onPick }) => {
   const ref = useRef(null);
   const scroll = (dir) => {
@@ -524,7 +514,6 @@ const Rail = ({ items, onPick }) => {
   );
 };
 
-// ---------- Genre strip ----------
 const GenreStrip = ({ setRoute, mobile, tablet, pad }) => {
   const { t } = useLang();
   const featured = [
@@ -581,7 +570,6 @@ const GenreStrip = ({ setRoute, mobile, tablet, pad }) => {
   );
 };
 
-// ---------- Editors picks block (mosaic) ----------
 const EditorsBlock = ({ anime, onPick, mobile, pad }) => {
   const { t } = useLang();
   const a1 = anime.find(a => a.id === 'vinland');

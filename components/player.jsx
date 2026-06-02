@@ -1,7 +1,3 @@
-// ============================================================
-// ANIMEMIX — Player page (video player with chrome)
-// ============================================================
-
 const PlayerPage = ({ animeId, setRoute, openAnime }) => {
   const { t } = useLang();
   const a = getAnime(animeId || 'solo-leveling');
@@ -20,7 +16,6 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
     return { cur: fmt(cur), total: fmt(total) };
   }, [progress]);
 
-  // simulate playback
   useEffect(() => {
     if (!playing) return;
     const t = setInterval(() => setProgress(p => Math.min(1, p + 0.0008)), 100);
@@ -37,7 +32,7 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
   return (
     <div className="page-enter" style={{ paddingTop: mobile ? 76 : 90, minHeight: '100vh' }}>
       <div style={{ maxWidth: 1480, margin: '0 auto', padding: `0 ${pad}px` }}>
-        {/* back */}
+        {}
         <button onClick={() => openAnime(a.id)} style={{
           display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16,
           background: 'transparent', border: 'none', color: 'var(--ink-dim)', cursor: 'pointer',
@@ -47,7 +42,7 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
         </button>
 
         <div style={{ display: 'grid', gridTemplateColumns: mobile || tablet ? '1fr' : '1fr 360px', gap: 24, alignItems: 'flex-start' }}>
-          {/* === PLAYER === */}
+          {}
           <div>
             <div
               onMouseEnter={() => setShowControls(true)}
@@ -57,30 +52,30 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
                 background: `linear-gradient(135deg, ${a.palette[0]}, ${a.palette[1]})`,
                 boxShadow: `0 30px 80px -20px ${a.accent}66, 0 0 0 1px ${a.accent}44`,
               }}>
-              {/* "video" content - simulated scene */}
+              {}
               <div style={{ position: 'absolute', inset: 0,
                 background: `radial-gradient(ellipse at 30% 40%, ${a.palette[2]}aa 0%, transparent 50%),
                   radial-gradient(ellipse at 70% 60%, ${a.palette[1]}88 0%, transparent 55%)`,
               }} />
 
-              {/* huge subject silhouette */}
+              {}
               <div className="font-display" style={{
                 position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)',
                 fontSize: 480, fontWeight: 900, color: 'rgba(0,0,0,0.35)',
                 lineHeight: 1, userSelect: 'none', letterSpacing: '-0.08em',
               }}>{a.titleJp.slice(0, 1)}</div>
 
-              {/* scan lines */}
+              {}
               <div style={{
                 position: 'absolute', inset: 0,
                 background: 'repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(0,0,0,0.25) 2px, rgba(0,0,0,0.25) 3px)',
                 opacity: 0.7, pointerEvents: 'none',
               }} />
 
-              {/* CRT vignette */}
+              {}
               <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.5) 100%)', pointerEvents: 'none' }} />
 
-              {/* timestamp overlay */}
+              {}
               <div className="font-mono" style={{
                 position: 'absolute', top: 16, left: 20, zIndex: 4,
                 fontSize: 11, color: a.accent, letterSpacing: '0.15em',
@@ -98,7 +93,7 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
                 <span style={{ padding: '3px 8px', background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 4 }}>UA DUB</span>
               </div>
 
-              {/* center play state */}
+              {}
               {!playing && (
                 <div onClick={() => setPlaying(true)} style={{
                   position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 5,
@@ -115,7 +110,7 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
                 </div>
               )}
 
-              {/* skip intro button (appears) */}
+              {}
               {progress < 0.08 && (
                 <button style={{
                   position: 'absolute', bottom: 90, right: 24, zIndex: 6,
@@ -126,7 +121,7 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
                 }}>SKIP OP →</button>
               )}
 
-              {/* ====== CONTROLS BAR ====== */}
+              {}
               <div style={{
                 position: 'absolute', left: 0, right: 0, bottom: 0, zIndex: 7,
                 padding: '24px 20px 14px',
@@ -134,21 +129,21 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
                 opacity: showControls ? 1 : 0,
                 transition: 'opacity 0.3s',
               }}>
-                {/* timeline */}
+                {}
                 <div style={{ position: 'relative', height: 4, background: 'rgba(255,255,255,0.15)', borderRadius: 2, marginBottom: 14, cursor: 'pointer' }}
                   onClick={e => {
                     const r = e.currentTarget.getBoundingClientRect();
                     setProgress((e.clientX - r.left) / r.width);
                   }}>
-                  {/* buffered */}
+                  {}
                   <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${Math.min(1, progress + 0.15) * 100}%`, background: 'rgba(255,255,255,0.25)', borderRadius: 2 }} />
-                  {/* progress */}
+                  {}
                   <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${progress * 100}%`, background: 'linear-gradient(to right, var(--magenta), var(--violet))', borderRadius: 2, boxShadow: '0 0 12px rgba(255,45,149,0.7)' }} />
-                  {/* chapters */}
+                  {}
                   {[0.05, 0.08, 0.4, 0.92].map((c, i) => (
                     <div key={i} style={{ position: 'absolute', left: `${c * 100}%`, top: -2, width: 2, height: 8, background: 'rgba(255,255,255,0.4)' }} />
                   ))}
-                  {/* scrubber */}
+                  {}
                   <div style={{
                     position: 'absolute', left: `${progress * 100}%`, top: '50%', transform: 'translate(-50%, -50%)',
                     width: 14, height: 14, borderRadius: '50%',
@@ -156,7 +151,7 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
                   }} />
                 </div>
 
-                {/* buttons row */}
+                {}
                 <div style={{ display: 'flex', alignItems: 'center', gap: mobile ? 8 : 16 }}>
                   <button onClick={() => setPlaying(!playing)} style={ctrlBtn}>
                     <Icon name={playing ? 'pause' : 'play'} size={20} />
@@ -186,7 +181,7 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
                   <button style={ctrlBtn}><Icon name="fullscreen" size={18} /></button>
                 </div>
 
-                {/* settings popover */}
+                {}
                 {showSettings && (
                   <div className="glass-strong" style={{
                     position: 'absolute', right: 50, bottom: 70,
@@ -202,7 +197,7 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
               </div>
             </div>
 
-            {/* below player: episode info */}
+            {}
             <div className="glass" style={{ marginTop: 20, padding: mobile ? 18 : 24, borderRadius: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 12, flexWrap: 'wrap' }}>
                 <div className="font-mono" style={{ fontSize: mobile ? 10 : 11, color: a.accent, letterSpacing: '0.15em' }}>
@@ -235,11 +230,11 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
               </div>
             </div>
 
-            {/* live chat */}
+            {}
             <LiveChat anime={a} />
           </div>
 
-          {/* === EPISODE SIDEBAR === */}
+          {}
           <aside style={mobile || tablet ? {} : { position: 'sticky', top: 100 }}>
             <div className="glass" style={{ borderRadius: 16, overflow: 'hidden' }}>
               <div style={{ padding: '18px 20px', borderBottom: '1px solid var(--line)' }}>
@@ -288,7 +283,7 @@ const PlayerPage = ({ animeId, setRoute, openAnime }) => {
               </div>
             </div>
 
-            {/* up next */}
+            {}
             <div className="glass" style={{ marginTop: 16, padding: 16, borderRadius: 14 }}>
               <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 10 }}>{t('playerUpNextLabel')}</div>
               <div style={{ display: 'flex', gap: 12 }}>

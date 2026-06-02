@@ -1,13 +1,8 @@
-// ============================================================
-// ANIMEMIX — Auth client
-// ============================================================
-
 const TOKEN_KEY   = 'animemix_token';
 const REFRESH_KEY = 'animemix_refresh';
 const USER_KEY    = 'animemix_user';
 
 window.AuthClient = {
-  // ── Storage helpers ────────────────────────────────────────────────────
   getToken()   { return localStorage.getItem(TOKEN_KEY); },
   getRefresh() { return localStorage.getItem(REFRESH_KEY); },
   getUser()    { try { return JSON.parse(localStorage.getItem(USER_KEY)); } catch { return null; } },
@@ -29,14 +24,12 @@ window.AuthClient = {
     window.dispatchEvent(new CustomEvent('auth-change', { detail: null }));
   },
 
-  // ── Fetch wrapper з авто-токеном ────────────────────────────────────────
   async _fetch(path, opts = {}) {
     const token = this.getToken();
     const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
     if (token) headers['Authorization'] = `Bearer ${token}`;
     const res = await fetch('/api/auth' + path, { ...opts, headers });
 
-    // Якщо токен протух — спробуємо refresh
     if (res.status === 401) {
       const refreshed = await this._tryRefresh();
       if (refreshed) {
@@ -64,7 +57,6 @@ window.AuthClient = {
     }
   },
 
-  // ── Public API ──────────────────────────────────────────────────────────
   async register(email, username, password) {
     const res  = await this._fetch('/register', { method: 'POST', body: JSON.stringify({ email, username, password }) });
     const data = await res.json();
@@ -96,7 +88,6 @@ window.AuthClient = {
   },
 };
 
-// ── Init: відновити сесію при завантаженні ────────────────────────────────
 window.__currentUser = AuthClient.getUser();
 if (AuthClient.isLoggedIn()) {
   AuthClient.me().catch(() => AuthClient._clearSession());

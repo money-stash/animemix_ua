@@ -1,14 +1,10 @@
-// ============================================================
-// ANIMEMIX — Catalog page
-// ============================================================
-
 const CatalogPage = ({ openAnime }) => {
   const { t } = useLang();
   const [activeGenres, setActiveGenres] = useState(['Екшн']);
   const [sort, setSort] = useState('hot');
   const [year, setYear] = useState('all');
   const [status, setStatus] = useState('all');
-  const [view, setView] = useState('grid'); // grid | list
+  const [view, setView] = useState('grid');
   const { mobile, tablet, pad } = useBP();
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -17,7 +13,7 @@ const CatalogPage = ({ openAnime }) => {
   };
 
   const filtered = useMemo(() => {
-    let r = [...ANIME, ...ANIME, ...ANIME]; // dupe to fill grid
+    let r = [...ANIME, ...ANIME, ...ANIME];
     if (activeGenres.length) {
       r = r.filter(a => activeGenres.some(g => a.genres.includes(g)));
     }
@@ -32,7 +28,7 @@ const CatalogPage = ({ openAnime }) => {
   return (
     <div className="page-enter" style={{ paddingTop: mobile ? 84 : 110 }}>
       <div style={{ maxWidth: 1480, margin: '0 auto', padding: `0 ${pad}px` }}>
-        {/* header */}
+        {}
         <div style={{ marginBottom: mobile ? 24 : 40 }}>
           <div className="font-mono" style={{ fontSize: mobile ? 9 : 11, color: 'var(--magenta)', letterSpacing: '0.25em', marginBottom: 12 }}>
             {t('catalogHeader')}
@@ -48,7 +44,7 @@ const CatalogPage = ({ openAnime }) => {
           </div>
         </div>
 
-        {/* mobile filter trigger */}
+        {}
         {mobile && (
           <button onClick={() => setFiltersOpen(true)} className="glass btn" style={{
             width: '100%', justifyContent: 'center', padding: '14px', borderRadius: 12, marginBottom: 16,
@@ -58,9 +54,9 @@ const CatalogPage = ({ openAnime }) => {
           </button>
         )}
 
-        {/* layout */}
+        {}
         <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : tablet ? '230px 1fr' : '280px 1fr', gap: mobile ? 0 : 32, alignItems: 'flex-start' }}>
-          {/* sidebar filters — drawer on mobile */}
+          {}
           {mobile && filtersOpen && (
             <div onClick={() => setFiltersOpen(false)} style={{
               position: 'fixed', inset: 0, zIndex: 400, background: 'rgba(6,3,13,0.7)', backdropFilter: 'blur(6px)',
@@ -182,9 +178,9 @@ const CatalogPage = ({ openAnime }) => {
             </FilterGroup>
           </aside>
 
-          {/* main */}
+          {}
           <div>
-            {/* toolbar */}
+            {}
             <div className="glass" style={{ display: 'flex', alignItems: 'center', gap: mobile ? 8 : 16, padding: mobile ? '10px 14px' : '12px 20px', borderRadius: 14, marginBottom: 20, flexWrap: 'wrap' }}>
               <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: 'var(--ink-dim)' }}>
                 {t('toolbarFound')} <span className="neon-text-magenta">{filtered.length}</span>
@@ -224,7 +220,7 @@ const CatalogPage = ({ openAnime }) => {
               </div>
             </div>
 
-            {/* active genre pills */}
+            {}
             {activeGenres.length > 0 && (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 20 }}>
                 {activeGenres.map(g => (
@@ -241,7 +237,7 @@ const CatalogPage = ({ openAnime }) => {
               </div>
             )}
 
-            {/* grid */}
+            {}
             {view === 'grid' || mobile ? (
               <div style={{ display: 'grid', gridTemplateColumns: `repeat(${mobile ? 2 : tablet ? 3 : 5}, 1fr)`, gap: mobile ? 12 : 18 }}>
                 {filtered.slice(0, 30).map((a, i) => (
@@ -254,7 +250,7 @@ const CatalogPage = ({ openAnime }) => {
               </div>
             )}
 
-            {/* pagination */}
+            {}
             <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginTop: 60 }}>
               {['1', '2', '3', '...', '127', t('paginationNext')].map((p, i) => (
                 <button key={i} style={{

@@ -2,16 +2,13 @@ import os
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 
-
 def create_app(env=None):
     app = Flask(__name__, static_folder='.')
 
-    # ── Config ────────────────────────────────────────────────────────────────
     from backend.config import config_map
     cfg_key = env or os.environ.get('FLASK_ENV', 'default')
     app.config.from_object(config_map[cfg_key])
 
-    # ── JWT ───────────────────────────────────────────────────────────────────
     import datetime as dt
     app.config['JWT_SECRET_KEY']             = os.environ.get('JWT_SECRET_KEY', 'animemix-jwt-dev-secret-change-in-prod')
     app.config['JWT_ACCESS_TOKEN_EXPIRES']   = dt.timedelta(minutes=30)
@@ -20,17 +17,15 @@ def create_app(env=None):
     from flask_jwt_extended import JWTManager
     JWTManager(app)
 
-    # ── Extensions ────────────────────────────────────────────────────────────
     CORS(app)
     from backend.database import init_db
     init_db(app)
 
-    # ── API blueprints ────────────────────────────────────────────────────────
-    from backend.api import api_bp, auth_bp
+    from backend.api import api_bp, auth_bp, library_bp
     app.register_blueprint(api_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(library_bp)
 
-    # ── Static file routes ────────────────────────────────────────────────────
     @app.route('/')
     def index():
         return send_from_directory('pages', 'animemix.html')
@@ -61,8 +56,6 @@ def create_app(env=None):
 
     return app
 
-
-# ── Entry point ───────────────────────────────────────────────────────────────
 app = create_app()
 
 if __name__ == '__main__':

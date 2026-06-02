@@ -1,11 +1,7 @@
-/* ============================================================
-   ANIMEMIX — cyberpunk neon glass tokens
-   ============================================================ */
-
 @import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800;900&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 :root {
-  /* base */
+  
   --bg-0: #06030d;
   --bg-1: #0c0718;
   --bg-2: #14092a;
@@ -15,7 +11,7 @@
   --line: rgba(255, 255, 255, 0.07);
   --line-strong: rgba(255, 255, 255, 0.14);
 
-  /* neon palette */
+  
   --magenta: #ff2d95;
   --magenta-hot: #ff007a;
   --violet: #b026ff;
@@ -25,23 +21,23 @@
   --lime: #c4ff3d;
   --gold: #ffce4a;
 
-  /* gradients */
+  
   --grad-primary: linear-gradient(135deg, #ff2d95 0%, #b026ff 50%, #6b4dff 100%);
   --grad-soft: linear-gradient(135deg, rgba(255, 45, 149, 0.18), rgba(176, 38, 255, 0.18));
   --grad-glow: radial-gradient(ellipse at center, rgba(176, 38, 255, 0.35), transparent 70%);
 
-  /* glass */
+  
   --glass-bg: rgba(20, 9, 42, 0.45);
   --glass-bg-strong: rgba(20, 9, 42, 0.75);
   --glass-border: rgba(167, 139, 250, 0.18);
   --glass-blur: 22px;
 
-  /* shadows */
+  
   --shadow-neon: 0 0 0 1px rgba(255, 45, 149, 0.35), 0 8px 40px -10px rgba(255, 45, 149, 0.55);
   --shadow-violet: 0 0 0 1px rgba(176, 38, 255, 0.35), 0 8px 40px -10px rgba(176, 38, 255, 0.6);
   --shadow-deep: 0 30px 80px -30px rgba(0, 0, 0, 0.9);
 
-  /* radii */
+  
   --r-sm: 6px;
   --r-md: 12px;
   --r-lg: 20px;
@@ -70,7 +66,6 @@ body {
   min-height: 100vh;
 }
 
-/* Global scan-lines overlay */
 body::before {
   content: '';
   position: fixed;
@@ -86,7 +81,6 @@ body::before {
   z-index: 200;
 }
 
-/* Noise grain */
 body::after {
   content: '';
   position: fixed;
@@ -97,14 +91,12 @@ body::after {
   z-index: 201;
 }
 
-/* ============== typography ============== */
 .font-display { font-family: 'Unbounded', sans-serif; letter-spacing: -0.02em; }
 .font-mono { font-family: 'JetBrains Mono', monospace; }
 .font-jp { font-family: 'Unbounded', sans-serif; font-weight: 300; }
 
 h1, h2, h3, h4 { font-family: 'Unbounded', sans-serif; margin: 0; letter-spacing: -0.02em; }
 
-/* ============== utilities ============== */
 .neon-text-magenta {
   color: var(--magenta);
   text-shadow: 0 0 12px rgba(255, 45, 149, 0.6), 0 0 28px rgba(255, 45, 149, 0.35);
@@ -142,7 +134,6 @@ h1, h2, h3, h4 { font-family: 'Unbounded', sans-serif; margin: 0; letter-spacing
   transform: translateZ(0);
 }
 
-/* ============== glitch ============== */
 .glitch {
   position: relative;
   display: inline-block;
@@ -176,14 +167,12 @@ h1, h2, h3, h4 { font-family: 'Unbounded', sans-serif; margin: 0; letter-spacing
   80% { transform: translate(2px, -2px); opacity: 1; }
 }
 
-/* always-on subtle glitch for hero title */
 .glitch-live::before,
 .glitch-live::after {
   opacity: 1;
   animation: glitch-flicker 4s steps(2, end) infinite;
 }
 
-/* ============== scan-line panel ============== */
 .scanlines {
   position: relative;
   overflow: hidden;
@@ -202,7 +191,6 @@ h1, h2, h3, h4 { font-family: 'Unbounded', sans-serif; margin: 0; letter-spacing
   pointer-events: none;
 }
 
-/* ============== buttons ============== */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -224,7 +212,6 @@ h1, h2, h3, h4 { font-family: 'Unbounded', sans-serif; margin: 0; letter-spacing
   overflow: hidden;
 }
 
-/* Shimmer sweep on hover */
 .btn::before {
   content: '';
   position: absolute;
@@ -240,7 +227,6 @@ h1, h2, h3, h4 { font-family: 'Unbounded', sans-serif; margin: 0; letter-spacing
 .btn:hover { transform: translateY(-2px) scale(1.02); }
 .btn:active { transform: translateY(0) scale(0.98); transition-duration: 0.08s; }
 
-/* ── Primary ── */
 .btn-primary {
   background: var(--grad-primary);
   color: white;
@@ -253,7 +239,6 @@ h1, h2, h3, h4 { font-family: 'Unbounded', sans-serif; margin: 0; letter-spacing
   filter: brightness(1.08);
 }
 
-/* ── Ghost ── */
 .btn-ghost {
   border: 1px solid var(--glass-border);
   background: rgba(255, 255, 255, 0.04);
@@ -268,7 +253,6 @@ h1, h2, h3, h4 { font-family: 'Unbounded', sans-serif; margin: 0; letter-spacing
               inset 0 0 20px rgba(255,45,149,0.06);
 }
 
-/* ============== badge / chip ============== */
 .chip {
   display: inline-flex;
   align-items: center;
@@ -284,7 +268,7 @@ h1, h2, h3, h4 { font-family: 'Unbounded', sans-serif; margin: 0; letter-spacing
   color: var(--ink-dim);
   transition: border-color 0.18s, background 0.18s, color 0.18s, transform 0.18s, box-shadow 0.18s;
 }
-/* Chips that are clickable (filter buttons in catalog) */
+
 button.chip:hover {
   border-color: rgba(176, 38, 255, 0.6);
   background: rgba(176, 38, 255, 0.12);
@@ -308,7 +292,6 @@ button.chip:hover {
   color: var(--lime);
 }
 
-/* ============== scrollbar ============== */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
@@ -316,11 +299,9 @@ button.chip:hover {
   border-radius: 100px;
 }
 
-/* hide scrollbar for rails */
 .rail::-webkit-scrollbar { display: none; }
 .rail { scrollbar-width: none; }
 
-/* ============== animations ============== */
 @keyframes pulse-glow {
   0%, 100% { box-shadow: 0 0 0 0 rgba(255, 45, 149, 0.6); }
   50% { box-shadow: 0 0 0 12px rgba(255, 45, 149, 0); }
@@ -361,7 +342,6 @@ button.chip:hover {
   100% { background-position: 200% 0; }
 }
 
-/* ============== inputs ============== */
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -387,7 +367,6 @@ input[type="search"]:focus {
   background: rgba(255,255,255,0.07) !important;
 }
 
-/* ============== glass interactive (search bar, nav buttons) ============== */
 .glass:hover:not(.no-hover) {
   border-color: rgba(167, 139, 250, 0.35) !important;
   box-shadow: 0 8px 32px -8px rgba(176,38,255,0.25),
@@ -395,7 +374,6 @@ input[type="search"]:focus {
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-/* ============== clickable cover cards ============== */
 .cover {
   transition: transform 0.35s cubic-bezier(.2,.9,.3,1.2), box-shadow 0.3s !important;
 }
@@ -405,7 +383,6 @@ input[type="search"]:focus {
               0 0 0 1px rgba(255,255,255,0.1) !important;
 }
 
-/* ============== year / sort pill buttons ============== */
 .pill-btn {
   transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.18s, box-shadow 0.18s;
 }
@@ -417,10 +394,8 @@ input[type="search"]:focus {
   box-shadow: 0 4px 12px -4px rgba(255,45,149,0.3);
 }
 
-/* ============== app shell ============== */
 #app { min-height: 100vh; }
 
-/* ============== top nav links ============== */
 .nav-link {
   position: relative;
 }
@@ -458,7 +433,6 @@ input[type="search"]:focus {
 
 .page-enter { animation: float-up 0.5s ease both; }
 
-/* grid utility */
 .grid-bg {
   background-image:
     linear-gradient(rgba(167, 139, 250, 0.05) 1px, transparent 1px),
@@ -466,7 +440,6 @@ input[type="search"]:focus {
   background-size: 40px 40px;
 }
 
-/* corner brackets */
 .brackets {
   position: relative;
 }
@@ -510,27 +483,21 @@ input[type="search"]:focus {
 
 .cover-upload-btn:hover { background: rgba(255,45,149,0.6) !important; }
 
-/* hide JP decorative text when toggled off */
 body.no-jp .font-jp { display: none; }
 
-/* ============================================================
-   RESPONSIVE — phones, tablets, laptops, desktops
-   ============================================================ */
-
-/* bottom nav (mobile only — toggled via JS class on <body>) */
 .bottom-nav { display: none; }
 
 @media (max-width: 1024px) {
-  /* tame the giant fixed page paddings */
+  
   .scan-sweep { height: 80px; }
 }
 
 @media (max-width: 767px) {
   body { -webkit-text-size-adjust: 100%; }
-  /* reduce global grain/scanline intensity a touch on small screens */
+  
   body::before { background-size: auto; }
 
-  /* show mobile bottom nav, add safe-area padding to page bottom */
+  
   .bottom-nav {
     display: flex !important;
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 150;
@@ -541,14 +508,13 @@ body.no-jp .font-jp { display: none; }
     border-top: 1px solid var(--glass-border);
     justify-content: space-around; align-items: center;
   }
-  /* give content room above the bottom nav */
+  
   #app { padding-bottom: 72px; }
 
-  /* horizontal scrollers shouldn't show nav arrows on touch */
+  
   .rail-arrow { display: none !important; }
 }
 
-/* utility classes the JS can lean on */
 .hide-mobile {}
 @media (max-width: 767px) {
   .hide-mobile { display: none !important; }
@@ -557,4 +523,3 @@ body.no-jp .font-jp { display: none; }
 @media (max-width: 767px) {
   .show-mobile { display: block !important; }
 }
-

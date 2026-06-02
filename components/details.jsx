@@ -1,19 +1,58 @@
-// ============================================================
-// ANIMEMIX — Details + Player + Profile + Auth
-// ============================================================
+const STATUS_LABELS = {
+  watching:  { uk: 'Дивлюсь',     en: 'Watching'       },
+  completed: { uk: 'Завершено',   en: 'Completed'      },
+  plan:      { uk: 'Заплановано', en: 'Plan to watch'  },
+  on_hold:   { uk: 'На паузі',    en: 'On hold'        },
+  dropped:   { uk: 'Кинув',       en: 'Dropped'        },
+};
 
-// =================================================================
-// DETAILS PAGE
-// =================================================================
 const DetailsPage = ({ animeId, openAnime, setRoute }) => {
   const { t } = useLang();
   const a = getAnime(animeId || 'solo-leveling');
   const [tab, setTab] = useState('episodes');
   const [season, setSeason] = useState(2);
-  const [inList, setInList] = useState(false);
+  const [listEntry, setListEntry] = useState(null);
+  const [listLoading, setListLoading] = useState(false);
+  const [showStatusMenu, setShowStatusMenu] = useState(false);
   const coverUrl = useCover(a.id);
   const [posterOver, posterDrop, posterPicker, posterOpen] = useDropCover(a.id);
   const { mobile, tablet, pad } = useBP();
+
+  useEffect(() => {
+    if (!AuthClient.isLoggedIn()) return;
+    LibraryClient.getEntry(a.id).then(entry => setListEntry(entry?.status ? entry : null)).catch(() => {});
+  }, [a.id]);
+
+  const handleListToggle = async () => {
+    if (!AuthClient.isLoggedIn()) { setRoute('auth'); return; }
+    if (listEntry) {
+      setShowStatusMenu(v => !v);
+    } else {
+      setListLoading(true);
+      try {
+        const entry = await LibraryClient.upsert(a.id, { status: 'plan' });
+        setListEntry(entry);
+      } finally { setListLoading(false); }
+    }
+  };
+
+  const handleStatusChange = async (status) => {
+    setShowStatusMenu(false);
+    if (status === 'remove') {
+      await LibraryClient.remove(a.id);
+      setListEntry(null);
+    } else {
+      setListLoading(true);
+      try {
+        const entry = await LibraryClient.patch(a.id, { status });
+        setListEntry(entry);
+      } finally { setListLoading(false); }
+    }
+  };
+
+  const statusLabel = listEntry
+    ? (STATUS_LABELS[listEntry.status]?.[window.__lang] || listEntry.status)
+    : null;
 
   const episodes = useMemo(() => {
     return Array.from({ length: 25 }, (_, i) => ({
@@ -30,9 +69,9 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
 
   return (
     <div className="page-enter">
-      {/* HERO */}
+      {}
       <section style={{ position: 'relative', minHeight: mobile ? 'auto' : 720, overflow: 'hidden' }}>
-        {/* bg */}
+        {}
         <div style={{
           position: 'absolute', inset: 0,
           background: `
@@ -57,7 +96,7 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
           </button>
 
           <div style={{ display: 'grid', gridTemplateColumns: mobile ? '1fr' : '320px 1fr', gap: mobile ? 28 : 48, alignItems: 'flex-start' }}>
-            {/* poster */}
+            {}
             <div style={mobile ? { maxWidth: 220, margin: '0 auto', width: '100%' } : undefined}>
               <div className="cover-droppable" {...posterDrop} style={{
                 position: 'relative', borderRadius: 16, overflow: 'hidden',
@@ -74,14 +113,14 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
                   <div className="font-mono" style={{ fontSize: 10, color: a.accent, letterSpacing: '0.15em', marginBottom: 6 }}>{a.titleJp}</div>
                   <div className="font-display" style={{ fontSize: 22, fontWeight: 700 }}>{animeTitle(a)}</div>
                 </div>
-                {/* corner brackets */}
+                {}
                 <div style={{ position: 'absolute', top: 8, left: 8, zIndex: 4, width: 16, height: 16, borderLeft: `2px solid ${a.accent}`, borderTop: `2px solid ${a.accent}` }} />
                 <div style={{ position: 'absolute', top: 8, right: 8, zIndex: 4, width: 16, height: 16, borderRight: `2px solid ${a.accent}`, borderTop: `2px solid ${a.accent}` }} />
                 <div style={{ position: 'absolute', bottom: 8, left: 8, zIndex: 4, width: 16, height: 16, borderLeft: `2px solid ${a.accent}`, borderBottom: `2px solid ${a.accent}` }} />
                 <div style={{ position: 'absolute', bottom: 8, right: 8, zIndex: 4, width: 16, height: 16, borderRight: `2px solid ${a.accent}`, borderBottom: `2px solid ${a.accent}` }} />
               </div>
 
-              {/* below poster: quick stats */}
+              {}
               <div className="glass" style={{ marginTop: 16, padding: 18, borderRadius: 16 }}>
                 <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 12 }}>METADATA</div>
                 <Meta k={t('metaStudio')} v={a.studio} />
@@ -94,7 +133,7 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
               </div>
             </div>
 
-            {/* main info */}
+            {}
             <div>
               <div className="font-mono" style={{ fontSize: 11, color: a.accent, letterSpacing: '0.25em', marginBottom: 10 }}>
                 ▶ {a.titleEn.toUpperCase()} · S0{season} · {a.year}
@@ -106,7 +145,7 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
                 {a.titleJp}
               </div>
 
-              {/* stats bar */}
+              {}
               <div style={{ display: 'flex', gap: mobile ? 20 : 32, flexWrap: 'wrap', marginBottom: 28, fontSize: 13 }}>
                 <Stat label={t('statLabelRating')} value={a.rating} sub="MAL 9.4" big color="var(--gold)" star />
                 <Stat label={t('statLabelRank')} value="#12" sub={t('statSubWeek')} big />
@@ -126,9 +165,57 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
                 <button onClick={() => setRoute('player')} className="btn btn-primary" style={{ padding: '16px 32px', fontSize: 14, flex: mobile ? '1 1 100%' : undefined, justifyContent: 'center' }}>
                   <Icon name="play" size={18} /> {t('btnContinueWatching')}
                 </button>
-                <button onClick={() => setInList(!inList)} className="btn btn-ghost" style={{ padding: '16px 24px' }}>
-                  <Icon name={inList ? 'check' : 'plus'} size={16} /> {inList ? t('btnInList') : t('btnAddToList')}
-                </button>
+                {}
+                <div style={{ position: 'relative' }}>
+                  <button
+                    onClick={handleListToggle}
+                    disabled={listLoading}
+                    className="btn btn-ghost"
+                    style={{
+                      padding: '16px 24px', opacity: listLoading ? 0.7 : 1,
+                      borderColor: listEntry ? 'rgba(0,240,255,0.5)' : undefined,
+                      color: listEntry ? 'var(--cyan)' : undefined,
+                    }}
+                  >
+                    <Icon name={listEntry ? 'check' : 'plus'} size={16} />
+                    {listEntry ? statusLabel : t('btnAddToList')}
+                    {listEntry && <Icon name="chevron-down" size={12} />}
+                  </button>
+
+                  {showStatusMenu && (
+                    <div className="glass-strong" style={{
+                      position: 'absolute', top: 'calc(100% + 8px)', left: 0, zIndex: 200,
+                      borderRadius: 12, overflow: 'hidden', minWidth: 180,
+                      boxShadow: '0 16px 40px -8px rgba(0,0,0,0.6)',
+                    }}>
+                      {Object.entries(STATUS_LABELS).map(([key, labels]) => (
+                        <button key={key} onClick={() => handleStatusChange(key)} style={{
+                          display: 'flex', alignItems: 'center', gap: 10, width: '100%',
+                          padding: '10px 16px', background: listEntry?.status === key ? 'rgba(0,240,255,0.08)' : 'transparent',
+                          border: 'none', cursor: 'pointer', color: listEntry?.status === key ? 'var(--cyan)' : 'var(--ink-dim)',
+                          fontFamily: 'Manrope', fontSize: 13, textAlign: 'left',
+                          transition: 'background 0.15s',
+                        }}
+                          onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                          onMouseLeave={e => e.currentTarget.style.background = listEntry?.status === key ? 'rgba(0,240,255,0.08)' : 'transparent'}
+                        >
+                          {listEntry?.status === key && <Icon name="check" size={13} />}
+                          {labels[window.__lang] || labels.uk}
+                        </button>
+                      ))}
+                      <div style={{ height: 1, background: 'var(--line)', margin: '4px 0' }} />
+                      <button onClick={() => handleStatusChange('remove')} style={{
+                        display: 'flex', alignItems: 'center', gap: 10, width: '100%',
+                        padding: '10px 16px', background: 'transparent',
+                        border: 'none', cursor: 'pointer', color: 'rgba(255,80,80,0.8)',
+                        fontFamily: 'Manrope', fontSize: 13, textAlign: 'left',
+                      }}>
+                        <Icon name="logout" size={13} />
+                        {window.__lang === 'en' ? 'Remove from list' : 'Видалити зі списку'}
+                      </button>
+                    </div>
+                  )}
+                </div>
                 <button className="btn btn-ghost" style={{ padding: 16 }}>
                   <Icon name="heart" size={16} />
                 </button>
@@ -137,7 +224,7 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
                 </button>
               </div>
 
-              {/* progress bar for series */}
+              {}
               <div className="glass" style={{ padding: 18, borderRadius: 14 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
                   <div className="font-mono" style={{ fontSize: 10, color: 'var(--ink-mute)', letterSpacing: '0.2em' }}>{t('progressLabel')}</div>
@@ -152,9 +239,9 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
         </div>
       </section>
 
-      {/* TABS */}
+      {}
       <section style={{ maxWidth: 1480, margin: '0 auto', padding: `0 ${pad}px 60px` }}>
-        {/* tab nav */}
+        {}
         <div className="rail" style={{ display: 'flex', gap: 0, borderBottom: '1px solid var(--line)', marginBottom: 32, overflowX: 'auto' }}>
           {[
             { v: 'episodes', l: t('tabEpisodes'), n: a.ep },
@@ -180,7 +267,7 @@ const DetailsPage = ({ animeId, openAnime, setRoute }) => {
 
         {tab === 'episodes' && (
           <div>
-            {/* season selector */}
+            {}
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
               <span className="font-mono" style={{ fontSize: 11, color: 'var(--ink-mute)', letterSpacing: '0.15em' }}>{t('seasonLabel')}</span>
               {[1, 2].map(s => (
@@ -245,7 +332,7 @@ const EpisodeCard = ({ ep, anime, onClick }) => {
       borderColor: ep.current ? 'rgba(255, 45, 149, 0.4)' : 'var(--glass-border)',
       background: ep.current ? 'rgba(255, 45, 149, 0.06)' : 'var(--glass-bg)',
     }}>
-      {/* thumb */}
+      {}
       <div style={{
         position: 'relative', width: 160, height: 90, flexShrink: 0, borderRadius: 8, overflow: 'hidden',
         background: `linear-gradient(135deg, ${anime.palette[(ep.n - 1) % 3]}, ${anime.palette[(ep.n) % 3]})`,
@@ -336,7 +423,7 @@ const ReviewsTab = ({ anime, mobile }) => {
   ];
   return (
     <div>
-      {/* score breakdown */}
+      {}
       <div className="glass" style={{ padding: mobile ? 20 : 28, borderRadius: 20, marginBottom: 28, display: 'grid', gridTemplateColumns: mobile ? '1fr' : '200px 1fr', gap: mobile ? 24 : 40, alignItems: 'center' }}>
         <div style={{ textAlign: 'center' }}>
           <div className="font-display gradient-text" style={{ fontSize: 80, fontWeight: 900, lineHeight: 1 }}>{anime.rating}</div>

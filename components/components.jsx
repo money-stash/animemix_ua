@@ -1,14 +1,9 @@
-// ============================================================
-// ANIMEMIX — shared components
-// ============================================================
 const { useState, useEffect, useRef, useMemo, useCallback } = React;
 
 const useLang = () => {
   const [, rerender] = useState(0);
   useEffect(() => {
     const h = () => rerender(n => n + 1);
-    // langchange → оновлює t() рядки (синхронно)
-    // animemix-data-ready → оновлює window.ANIME (після async fetch)
     window.addEventListener('langchange', h);
     window.addEventListener('animemix-data-ready', h);
     return () => {
@@ -19,7 +14,6 @@ const useLang = () => {
   return { t: window.t };
 };
 
-// --------- responsive viewport hook ---------
 function useVW() {
   const [vw, setVw] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280);
   useEffect(() => {
@@ -31,7 +25,6 @@ function useVW() {
   }, []);
   return vw;
 }
-// breakpoint helper: returns { vw, mobile, tablet, desktop, pad }
 function useBP() {
   const vw = useVW();
   return {
@@ -43,7 +36,6 @@ function useBP() {
   };
 }
 
-// --------- Icon set (inline SVG strokes) ---------
 const Icon = ({ name, size = 18, ...rest }) => {
   const props = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.7, strokeLinecap: 'round', strokeLinejoin: 'round', ...rest };
   switch (name) {
@@ -89,10 +81,6 @@ const Icon = ({ name, size = 18, ...rest }) => {
   }
 };
 
-// =================================================================
-// COVER IMAGE STORE — drag-drop your own posters, persisted, shared
-// across every instance of a title by id (localStorage).
-// =================================================================
 const COVERS_KEY = 'animemix_covers_v1';
 let _coversCache = (() => { try { return JSON.parse(localStorage.getItem(COVERS_KEY) || '{}'); } catch (e) { return {}; } })();
 function _persistCovers() {
@@ -103,7 +91,6 @@ function _persistCovers() {
 function writeCover(id, url) { _coversCache = { ..._coversCache, [id]: url }; _persistCovers(); }
 function clearCover(id) { const m = { ..._coversCache }; delete m[id]; _coversCache = m; _persistCovers(); }
 
-// downscale to keep localStorage small
 function fileToCover(file, cb) {
   if (!file || !file.type.startsWith('image/')) return;
   const reader = new FileReader();
@@ -133,7 +120,6 @@ function useCover(id) {
   return url;
 }
 
-// returns [isDragOver, handlerProps, openPicker]
 function useDropCover(id) {
   const [over, setOver] = useState(false);
   const inputRef = useRef(null);
@@ -154,8 +140,6 @@ function useDropCover(id) {
   return [over, handlers, picker, open];
 }
 
-// shared image + drop affordances rendered inside any card.
-// place AFTER the gradient art layers; sits at the given zIndex.
 const CoverArt = ({ id, over, picker, open, zIndex = 1, radius = 0, hideUploadBtn = false }) => {
   const url = useCover(id);
   return (
@@ -163,10 +147,9 @@ const CoverArt = ({ id, over, picker, open, zIndex = 1, radius = 0, hideUploadBt
       {url && (
         <img src={url} alt="" draggable={false} style={{
           position: 'absolute', inset: 0, width: '100%', height: '100%',
-          objectFit: 'cover', zIndex, borderRadius: radius, userSelect: 'none',
+          objectFit: 'cover', borderRadius: radius, zIndex,
         }} />
       )}
-      {/* drop highlight */}
       {over && (
         <div style={{
           position: 'absolute', inset: 0, zIndex: 20, borderRadius: radius,
@@ -196,7 +179,6 @@ const CoverArt = ({ id, over, picker, open, zIndex = 1, radius = 0, hideUploadBt
   );
 };
 
-// --------- Cover (your poster, or designed neon placeholder) ---------
 const Cover = ({ anime, size = 'md', showInfo = false, onClick, idx = 0, fluid = false }) => {
   const { t } = useLang();
   const [hovered, setHovered] = useState(false);
@@ -230,7 +212,7 @@ const Cover = ({ anime, size = 'md', showInfo = false, onClick, idx = 0, fluid =
           : '0 8px 30px -10px rgba(0,0,0,0.6)',
       }}
     >
-      {/* generated cover art */}
+      {}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 0,
         background: `
@@ -240,10 +222,10 @@ const Cover = ({ anime, size = 'md', showInfo = false, onClick, idx = 0, fluid =
         `,
       }} />
 
-      {/* your dropped poster (covers the gradient when present) */}
+      {}
       <CoverArt id={anime.id} over={over} picker={picker} open={openPicker} zIndex={1} />
 
-      {/* halftone dots */}
+      {}
       {!coverUrl && <div style={{
         position: 'absolute', inset: 0, zIndex: 1,
         backgroundImage: `radial-gradient(circle at 1px 1px, ${c3}44 1px, transparent 1.5px)`,
@@ -252,7 +234,7 @@ const Cover = ({ anime, size = 'md', showInfo = false, onClick, idx = 0, fluid =
         mixBlendMode: 'screen',
       }} />}
 
-      {/* big JP character */}
+      {}
       {!coverUrl && <div className="font-display" style={{
         position: 'absolute', right: -12, top: -20, zIndex: 1,
         fontSize: s.w * 0.7, fontWeight: 900,
@@ -263,17 +245,17 @@ const Cover = ({ anime, size = 'md', showInfo = false, onClick, idx = 0, fluid =
         userSelect: 'none',
       }}>{anime.titleJp.slice(0, 1)}</div>}
 
-      {/* corner glitch bars */}
+      {}
       <div style={{ position: 'absolute', left: 0, top: 0, width: '40%', height: 2, background: anime.accent, zIndex: 4, opacity: hovered ? 1 : 0.7, boxShadow: `0 0 8px ${anime.accent}` }} />
       <div style={{ position: 'absolute', right: 0, bottom: 0, width: '40%', height: 2, background: anime.accent, zIndex: 4, opacity: hovered ? 1 : 0.7, boxShadow: `0 0 8px ${anime.accent}` }} />
 
-      {/* badge column */}
+      {}
       <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 5, display: 'flex', flexDirection: 'column', gap: 5 }}>
         {anime.badges && anime.badges.includes('hot') && <span className="chip chip-hot" style={{ fontSize: 9, padding: '3px 7px' }}>● HOT</span>}
         {anime.badges && anime.badges.includes('new') && <span className="chip chip-new" style={{ fontSize: 9, padding: '3px 7px' }}>NEW</span>}
       </div>
 
-      {/* rating */}
+      {}
       <div className="font-mono" style={{
         position: 'absolute', top: 10, right: 10, zIndex: 5,
         fontSize: 11, color: 'white',
@@ -285,7 +267,7 @@ const Cover = ({ anime, size = 'md', showInfo = false, onClick, idx = 0, fluid =
         <span style={{ color: 'var(--gold)' }}>★</span>{anime.rating}
       </div>
 
-      {/* bottom info */}
+      {}
       <div style={{
         position: 'absolute', left: 0, right: 0, bottom: 0,
         padding: '12px 14px', zIndex: 6,
@@ -304,7 +286,7 @@ const Cover = ({ anime, size = 'md', showInfo = false, onClick, idx = 0, fluid =
         )}
       </div>
 
-      {/* hover play overlay */}
+      {}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 7,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -328,7 +310,6 @@ const Cover = ({ anime, size = 'md', showInfo = false, onClick, idx = 0, fluid =
   );
 };
 
-// --------- LangToggle ---------
 const LangToggle = () => {
   const [lang, setLangState] = useState(window.getLang());
   useEffect(() => {
@@ -344,7 +325,6 @@ const LangToggle = () => {
   );
 };
 
-// --------- Top Nav ---------
 const getNotifs = () => [
   { id: 1, unread: true,  icon: 'sparkles', title: t('notif1Title'), body: t('notif1Body'), time: t('notif1Time') },
   { id: 2, unread: true,  icon: 'bell',     title: t('notif2Title'), body: t('notif2Body'), time: t('notif2Time') },
@@ -387,7 +367,7 @@ const NotifBell = () => {
           boxShadow: '0 24px 60px -10px rgba(0,0,0,0.7), 0 0 0 1px rgba(167,139,250,0.15)',
           zIndex: 200,
         }}>
-          {/* header */}
+          {}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px 10px' }}>
             <span className="font-display" style={{ fontSize: 13, fontWeight: 700 }}>
               {t('notifTitle')} {unreadCount > 0 && (
@@ -409,7 +389,7 @@ const NotifBell = () => {
 
           <div style={{ height: 1, background: 'var(--line)' }} />
 
-          {/* list */}
+          {}
           <div style={{ maxHeight: 320, overflowY: 'auto' }} className="rail">
             {notifs.map((n, i) => (
               <div
@@ -444,7 +424,7 @@ const NotifBell = () => {
             ))}
           </div>
 
-          {/* footer */}
+          {}
           <div style={{ height: 1, background: 'var(--line)' }} />
           <div style={{ padding: '10px 16px', textAlign: 'center' }}>
             <button style={{
@@ -566,7 +546,7 @@ const TopNav = ({ route, setRoute, openSearch, currentUser }) => {
       </div>
     </header>
 
-    {/* mobile bottom nav */}
+    {}
     <nav className="bottom-nav">
       {[
         { id: 'home', label: t('navHome'), icon: 'home' },
@@ -599,7 +579,6 @@ const TopNav = ({ route, setRoute, openSearch, currentUser }) => {
   );
 };
 
-// --------- Section header ---------
 const SectionHeader = ({ kicker, title, action, onAction }) => (
   <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 20 }}>
     <div>
@@ -622,7 +601,6 @@ const SectionHeader = ({ kicker, title, action, onAction }) => (
   </div>
 );
 
-// --------- Search palette (cmd-k) ---------
 const SearchPalette = ({ open, onClose, onPick }) => {
   const [q, setQ] = useState('');
   const ref = useRef(null);
@@ -692,10 +670,6 @@ const SearchPalette = ({ open, onClose, onPick }) => {
   );
 };
 
-// --------- Floating Continue widget ---------
-// (not actually used as a popover — kept for reuse if needed)
-
-// --------- Footer ---------
 const Footer = () => {
   useLang();
   const { mobile, tablet, pad } = useBP();

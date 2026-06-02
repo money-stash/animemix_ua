@@ -1,22 +1,18 @@
-// ============================================================
-// ANIMEMIX — App shell with routing + tweaks
-// ============================================================
-
-const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+const TWEAK_DEFAULTS = {
   "accentColor": "#ff2d95",
   "secondaryColor": "#b026ff",
   "glassBlur": 22,
   "showJp": true,
   "scanlines": true,
   "density": "regular"
-}/*EDITMODE-END*/;
+};
 
 const ACCENT_OPTIONS = [
-  ['#ff2d95', '#b026ff', '#6b4dff'], // magenta + violet (default)
-  ['#00f0ff', '#b026ff', '#ff2d95'], // cyan + violet + magenta
-  ['#c4ff3d', '#00d4aa', '#6b4dff'], // matrix
-  ['#ff8a4c', '#ff007a', '#ffce4a'], // sunset
-  ['#ffce4a', '#ff007a', '#b026ff'], // gold + neon
+  ['#ff2d95', '#b026ff', '#6b4dff'],
+  ['#00f0ff', '#b026ff', '#ff2d95'],
+  ['#c4ff3d', '#00d4aa', '#6b4dff'],
+  ['#ff8a4c', '#ff007a', '#ffce4a'],
+  ['#ffce4a', '#ff007a', '#b026ff'],
 ];
 
 function AppLoader() {
@@ -56,14 +52,12 @@ function App() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(window.__currentUser || null);
 
-  // Слухаємо зміни авторизації
   useEffect(() => {
     const h = (e) => setCurrentUser(e.detail);
     window.addEventListener('auth-change', h);
     return () => window.removeEventListener('auth-change', h);
   }, []);
 
-  // apply tweaks to CSS vars
   useEffect(() => {
     const r = document.documentElement;
     r.style.setProperty('--magenta', t.accentColor);
@@ -75,7 +69,6 @@ function App() {
     document.body.classList.toggle('no-scanlines', !t.scanlines);
   }, [t]);
 
-  // keyboard shortcut
   useEffect(() => {
     const onKey = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -119,7 +112,7 @@ function App() {
 
       <SearchPalette open={searchOpen} onClose={() => setSearchOpen(false)} onPick={openAnime} />
 
-      {/* Tweaks panel */}
+      {}
       <TweaksPanel title="Tweaks">
         <TweakSection label={tr('tweakSectionColors')} />
         <TweakColor label={tr('tweakLabelPalette')}

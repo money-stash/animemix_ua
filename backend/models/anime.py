@@ -1,8 +1,6 @@
 from datetime import datetime
 from ..database import db
 
-# ── Many-to-many join tables ─────────────────────────────────────────────────
-
 anime_genres = db.Table(
     'anime_genres',
     db.Column('anime_id',  db.Integer, db.ForeignKey('anime.id',  ondelete='CASCADE'), primary_key=True),
@@ -15,50 +13,39 @@ anime_badges = db.Table(
     db.Column('badge_id',  db.Integer, db.ForeignKey('badges.id',  ondelete='CASCADE'), primary_key=True),
 )
 
-
-# ── Main Anime model ─────────────────────────────────────────────────────────
-
 class Anime(db.Model):
     __tablename__ = 'anime'
 
     id         = db.Column(db.Integer, primary_key=True)
     slug       = db.Column(db.String(200), unique=True, nullable=False, index=True)
 
-    # Titles
     title_uk   = db.Column(db.String(500), nullable=False)
     title_en   = db.Column(db.String(500), nullable=False)
     title_jp   = db.Column(db.String(500))
 
-    # Meta
     year            = db.Column(db.Integer, index=True)
     episodes_count  = db.Column(db.Integer)
     rating          = db.Column(db.Float, index=True)
-    status          = db.Column(db.String(50), index=True)   # airing | completed | upcoming
-    age_rating      = db.Column(db.String(10))               # 12+ | 16+ | 18+
-    source          = db.Column(db.String(100))              # manga | light_novel | original | game
-    runtime         = db.Column(db.String(20))               # "24 min"
+    status          = db.Column(db.String(50), index=True)
+    age_rating      = db.Column(db.String(10))
+    source          = db.Column(db.String(100))
+    runtime         = db.Column(db.String(20))
 
-    # Season labels (localised)
-    season_uk  = db.Column(db.String(100))   # "Зима 2024"
-    season_en  = db.Column(db.String(100))   # "Winter 2024"
+    season_uk  = db.Column(db.String(100))
+    season_en  = db.Column(db.String(100))
 
-    # Descriptions
     synopsis_uk = db.Column(db.Text)
     synopsis_en = db.Column(db.Text)
 
-    # Visuals
     cover_url  = db.Column(db.String(500))
-    palette    = db.Column(db.JSON)   # ["#hex1", "#hex2", "#hex3"]
+    palette    = db.Column(db.JSON)
     accent     = db.Column(db.String(20))
 
-    # FK
     studio_id  = db.Column(db.Integer, db.ForeignKey('studios.id'), index=True)
 
-    # Timestamps
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    # ── Relationships ─────────────────────────────────────────────────────────
     studio   = db.relationship('Studio', back_populates='anime')
     genres   = db.relationship('Genre',  secondary=anime_genres, lazy='joined')
     badges   = db.relationship('Badge',  secondary=anime_badges, lazy='joined')
@@ -69,7 +56,6 @@ class Anime(db.Model):
         cascade='all, delete-orphan',
     )
 
-    # ── Serialisation ─────────────────────────────────────────────────────────
     def to_dict(self, lang='uk', include_episodes=False):
         d = {
             'id':       self.slug,
@@ -83,9 +69,7 @@ class Anime(db.Model):
             'ep':       self.episodes_count,
             'rating':   self.rating,
             'status':   self.status,
-            # genres as slugs (stable, language-independent)
             'genres':   [g.slug for g in self.genres],
-            # localised genre names for display
             'genreNames': [g.name_uk if lang == 'uk' else g.name_en for g in self.genres],
             'studio':   self.studio.name if self.studio else None,
             'age':      self.age_rating,

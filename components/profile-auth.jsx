@@ -1,34 +1,64 @@
-// ============================================================
-// ANIMEMIX — Profile + Auth pages
-// ============================================================
-
-// =================================================================
-// PROFILE
-// =================================================================
 const ProfilePage = ({ openAnime, setRoute }) => {
   const { t } = useLang();
-  const [tab, setTab] = useState('library');
+  const [tab, setTab] = useState('watching');
   const { mobile, tablet, pad } = useBP();
 
-  const lists = {
-    watching: ANIME.filter(a => CONTINUE.find(c => c.id === a.id)),
-    completed: [ANIME[7], ANIME[10], ANIME[4]],
-    plan: [ANIME[1], ANIME[5], ANIME[6], ANIME[8]],
-    favorites: [ANIME[0], ANIME[2], ANIME[7]],
-    dropped: [ANIME[11]],
+  const user = AuthClient.getUser();
+
+  if (!user) {
+    setRoute('auth');
+    return null;
+  }
+
+  const [library, setLibrary] = useState([]);
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([
+      LibraryClient.getLibrary(),
+      LibraryClient.getStats(),
+    ]).then(([lib, st]) => {
+      setLibrary(lib || []);
+      setStats(st);
+    }).finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    const h = () => LibraryClient.getLibrary().then(lib => setLibrary(lib || []));
+    window.addEventListener('library-change', h);
+    return () => window.removeEventListener('library-change', h);
+  }, []);
+
+  const handleLogout = async () => {
+    await AuthClient.logout();
+    setRoute('home');
   };
+
+  const lists = {
+    watching:  library.filter(e => e.status === 'watching' ).map(e => e.anime),
+    completed: library.filter(e => e.status === 'completed').map(e => e.anime),
+    plan:      library.filter(e => e.status === 'plan'     ).map(e => e.anime),
+    favorites: library.filter(e => e.status === 'on_hold'  ).map(e => e.anime),
+    dropped:   library.filter(e => e.status === 'dropped'  ).map(e => e.anime),
+  };
+
+  const joinDate = user.created_at
+    ? new Date(user.created_at).toLocaleDateString(window.__lang === 'en' ? 'en-GB' : 'uk-UA', { month: 'long', year: 'numeric' })
+    : '';
+  const avatarLetter = (user.username || '?').slice(0, 1).toUpperCase();
 
   return (
     <div className="page-enter" style={{ paddingTop: mobile ? 84 : 110 }}>
       <div style={{ maxWidth: 1480, margin: '0 auto', padding: `0 ${pad}px` }}>
-        {/* HEADER BANNER */}
+        {}
         <div style={{
           position: 'relative', borderRadius: 24, overflow: 'hidden', marginBottom: mobile ? 24 : 40,
           padding: mobile ? 24 : 36,
           background: 'linear-gradient(135deg, rgba(255, 45, 149, 0.15) 0%, rgba(176, 38, 255, 0.15) 100%)',
           border: '1px solid rgba(167, 139, 250, 0.25)',
         }}>
-          {/* bg pattern */}
+          {}
           <div style={{
             position: 'absolute', inset: 0, backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 1.5px)`, backgroundSize: '16px 16px',
           }} />
@@ -48,26 +78,28 @@ const ProfilePage = ({ openAnime, setRoute }) => {
               position: 'relative', overflow: 'hidden',
             }}>
               <div className="scanlines" style={{ position: 'absolute', inset: 0 }} />
-              <span style={{ position: 'relative' }}>Я</span>
+              <span style={{ position: 'relative' }}>{avatarLetter}</span>
             </div>
             <div>
               <div className="font-mono" style={{ fontSize: 11, color: 'var(--magenta)', letterSpacing: '0.25em', marginBottom: 8 }}>
-                {t('profileUserMeta')}
+                USER · #{user.id} · {user.email}
               </div>
               <h1 className="font-display" style={{ fontSize: 'clamp(38px, 9vw, 56px)', fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 1 }}>
-                <span className="gradient-text">yana_kira</span>
+                <span className="gradient-text">{user.username}</span>
               </h1>
               <div className="font-jp" style={{ fontSize: 16, color: 'var(--violet-soft)', marginTop: 6 }}>
-                やな・キラ · {t('profileJoinDate')} · 国: 🇺🇦
+                {window.__lang === 'en' ? `member since ${joinDate}` : `з нами з ${joinDate}`} · 🇺🇦
               </div>
-              <p style={{ color: 'var(--ink-dim)', fontSize: 13, marginTop: 12, maxWidth: 480 }}>
-                {t('profileUserBio')}
-              </p>
+              {user.bio && (
+                <p style={{ color: 'var(--ink-dim)', fontSize: 13, marginTop: 12, maxWidth: 480 }}>
+                  {user.bio}
+                </p>
+              )}
               <div style={{ display: 'flex', gap: 8, marginTop: 14, flexWrap: 'wrap', justifyContent: mobile ? 'center' : 'flex-start' }}>
-                <span className="chip chip-hot">{t('profileStatTop')}</span>
-                <span className="chip chip-new">{t('profileStatTitles')}</span>
-                <span className="chip chip-dub">{t('profileStatHours')}</span>
-                <span className="chip">{t('profileStatReviews')}</span>
+                <span className="chip chip-new">📺 {stats ? stats.total : '—'} {window.__lang === 'en' ? 'titles' : 'тайтлів'}</span>
+                <span className="chip chip-dub">⌛ {stats ? stats.hours_watched : '—'} {window.__lang === 'en' ? 'hrs' : 'год'}</span>
+                {stats?.avg_rating && <span className="chip chip-hot">★ {stats.avg_rating}</span>}
+                {user.is_verified && <span className="chip" style={{ borderColor: 'rgba(0,240,255,0.4)', color: 'var(--cyan)' }}>✓ verified</span>}
               </div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -77,7 +109,7 @@ const ProfilePage = ({ openAnime, setRoute }) => {
               <button className="btn btn-ghost" style={{ padding: '10px 18px', fontSize: 11 }}>
                 {t('profileBtnShare')}
               </button>
-              <button onClick={() => setRoute('auth')} style={{
+              <button onClick={handleLogout} style={{
                 background: 'transparent', border: 'none', color: 'var(--ink-mute)', cursor: 'pointer',
                 fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.15em', padding: '8px 0',
               }}>
@@ -87,25 +119,25 @@ const ProfilePage = ({ openAnime, setRoute }) => {
           </div>
         </div>
 
-        {/* STATS GRID */}
+        {}
         <div style={{ display: 'grid', gridTemplateColumns: mobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: mobile ? 10 : 16, marginBottom: mobile ? 28 : 40 }}>
-          <BigStatCard label={t('statCardWatched')} value="247" sub={t('statCardWatchedSub')} jp="完了" color="var(--magenta)" />
-          <BigStatCard label={t('statCardTime')} value="4,128" sub={t('statCardTimeSub')} jp="時間" color="var(--violet-soft)" />
-          <BigStatCard label={t('statCardAvg')} value="8.4" sub={t('statCardAvgSub')} jp="評価" color="var(--cyan)" />
-          <BigStatCard label={t('statCardStreak')} value="42" sub={t('statCardStreakSub')} jp="連続" color="var(--lime)" />
+          <BigStatCard label={t('statCardWatched')} value={stats ? stats.completed : '—'} sub={t('statCardWatchedSub')} jp="完了" color="var(--magenta)" />
+          <BigStatCard label={t('statCardTime')} value={stats ? stats.hours_watched : '—'} sub={t('statCardTimeSub')} jp="時間" color="var(--violet-soft)" />
+          <BigStatCard label={t('statCardAvg')} value={stats?.avg_rating || '—'} sub={t('statCardAvgSub')} jp="評価" color="var(--cyan)" />
+          <BigStatCard label={t('statCardWatching')||'WATCHING'} value={stats ? stats.watching : '—'} sub={window.__lang==='en'?'in progress':'в процесі'} jp="継続" color="var(--lime)" />
         </div>
 
-        {/* TWO COL: lists + activity */}
+        {}
         <div style={{ display: 'grid', gridTemplateColumns: mobile || tablet ? '1fr' : '1fr 360px', gap: 32, alignItems: 'flex-start' }}>
           <div>
-            {/* TAB NAV */}
+            {}
             <div className="rail" style={{ display: 'flex', gap: 0, borderBottom: '1px solid var(--line)', marginBottom: 24, flexWrap: mobile ? 'nowrap' : 'wrap', overflowX: mobile ? 'auto' : 'visible' }}>
               {[
-                { v: 'library', l: t('profileTabLibrary'), n: 247 },
-                { v: 'watching', l: t('profileTabWatching'), n: lists.watching.length },
+                { v: 'watching',  l: t('profileTabWatching'),  n: lists.watching.length  },
                 { v: 'completed', l: t('profileTabCompleted'), n: lists.completed.length },
-                { v: 'plan', l: t('profileTabPlan'), n: lists.plan.length },
+                { v: 'plan',      l: t('profileTabPlan'),      n: lists.plan.length      },
                 { v: 'favorites', l: t('profileTabFavorites'), n: lists.favorites.length },
+                { v: 'dropped',   l: t('profileTabDropped')||'Dropped', n: lists.dropped.length },
                 { v: 'stats', l: t('profileTabStats') },
                 { v: 'achievements', l: t('profileTabAchievements') },
               ].map(tabItem => (
@@ -119,39 +151,44 @@ const ProfilePage = ({ openAnime, setRoute }) => {
               ))}
             </div>
 
-            {tab === 'library' && (
-              <div>
-                {[
-                  [t('libraryGroupWatching'), lists.watching],
-                  [t('libraryGroupCompleted'), lists.completed],
-                  [t('libraryGroupPlan'), lists.plan],
-                  [t('libraryGroupFavorites'), lists.favorites],
-                ].map(([title, items]) => (
-                  <div key={title} style={{ marginBottom: 36 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-                      <h3 className="font-display" style={{ fontSize: 20, fontWeight: 600 }}>{title}</h3>
-                      <span className="chip" style={{ fontSize: 10 }}>{items.length}</span>
-                      <div style={{ flex: 1, height: 1, background: 'var(--line)' }} />
+            {loading ? (
+              <div style={{ textAlign: 'center', padding: 60, color: 'var(--ink-mute)' }}>
+                <div className="font-mono" style={{ fontSize: 11, letterSpacing: '0.2em' }}>
+                  {window.__lang === 'en' ? 'Loading library...' : 'Завантаження бібліотеки...'}
+                </div>
+              </div>
+            ) : (
+              <>
+                {(lists[tab] || []).length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '60px 0' }}>
+                    <div style={{ fontSize: 48, marginBottom: 16 }}>📭</div>
+                    <div className="font-display" style={{ fontSize: 22, fontWeight: 600, marginBottom: 8 }}>
+                      {window.__lang === 'en' ? 'Nothing here yet' : 'Тут ще нічого немає'}
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${mobile ? 2 : tablet ? 3 : 4}, 1fr)`, gap: mobile ? 12 : 16 }}>
-                      {items.map(a => <Cover key={a.id} anime={a} size="md" fluid onClick={() => openAnime(a.id)} />)}
-                    </div>
+                    <p style={{ color: 'var(--ink-dim)', fontSize: 14 }}>
+                      {window.__lang === 'en'
+                        ? 'Find anime you like and add it to your list'
+                        : 'Знайди аніме яке подобається і додай до списку'}
+                    </p>
+                    <button onClick={() => setRoute('catalog')} className="btn btn-primary" style={{ marginTop: 24 }}>
+                      {window.__lang === 'en' ? 'Browse Catalog' : 'До каталогу'}
+                    </button>
                   </div>
-                ))}
-              </div>
-            )}
-
-            {(tab === 'watching' || tab === 'completed' || tab === 'plan' || tab === 'favorites') && (
-              <div style={{ display: 'grid', gridTemplateColumns: `repeat(${mobile ? 2 : tablet ? 3 : 4}, 1fr)`, gap: mobile ? 12 : 16 }}>
-                {lists[tab].map(a => <Cover key={a.id} anime={a} size="md" fluid onClick={() => openAnime(a.id)} />)}
-              </div>
+                ) : (
+                  <div style={{ display: 'grid', gridTemplateColumns: `repeat(${mobile ? 2 : tablet ? 3 : 4}, 1fr)`, gap: mobile ? 12 : 16 }}>
+                    {(lists[tab] || []).filter(Boolean).map(a => (
+                      <Cover key={a.id} anime={a} size="md" fluid onClick={() => openAnime(a.id)} />
+                    ))}
+                  </div>
+                )}
+              </>
             )}
 
             {tab === 'stats' && <StatsTab mobile={mobile} />}
             {tab === 'achievements' && <AchievementsTab mobile={mobile} />}
           </div>
 
-          {/* RIGHT: activity feed */}
+          {}
           <aside>
             <div className="glass" style={{ padding: 20, borderRadius: 16, marginBottom: 16 }}>
               <div className="font-mono" style={{ fontSize: 10, color: 'var(--magenta)', letterSpacing: '0.2em', marginBottom: 14 }}>{t('activitySectionLabel')}</div>
@@ -217,7 +254,6 @@ const BigStatCard = ({ label, value, sub, jp, color }) => (
 
 const StatsTab = ({ mobile }) => {
   const { t } = useLang();
-  // weekly chart
   const days = ['П', 'В', 'С', 'Ч', 'П', 'С', 'Н'];
   const heights = [40, 65, 30, 80, 92, 100, 70];
   const genres = [
@@ -318,12 +354,9 @@ const AchievementsTab = ({ mobile }) => {
   );
 };
 
-// =================================================================
-// AUTH (login + register toggle)
-// =================================================================
 const AuthPage = ({ setRoute }) => {
   const { t } = useLang();
-  const [mode, setMode] = useState('login'); // login | signup
+  const [mode, setMode] = useState('login');
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const [name, setName] = useState('');
@@ -354,7 +387,7 @@ const AuthPage = ({ setRoute }) => {
       padding: `${mobile ? 88 : 120}px ${pad}px 60px`,
     }}>
       <div style={{ display: 'grid', gridTemplateColumns: mobile || tablet ? '1fr' : '1fr 1fr', maxWidth: 1100, width: '100%', gap: mobile ? 28 : 60, alignItems: 'center' }}>
-        {/* LEFT: art panel */}
+        {}
         <div className="glass" style={{
           position: 'relative', overflow: 'hidden', borderRadius: mobile ? 20 : 32, padding: mobile ? 28 : 48,
           minHeight: mobile ? 280 : 600,
@@ -401,10 +434,9 @@ const AuthPage = ({ setRoute }) => {
           </div>
         </div>
 
-        {/* RIGHT: form */}
+        {}
         <div>
           <div className="font-mono" style={{ fontSize: 11, color: 'var(--magenta)', letterSpacing: '0.3em', marginBottom: 12 }}>
-            // {mode === 'login' ? t('authModeLogin') : t('authModeSignup')}
           </div>
           <h1 className="font-display" style={{ fontSize: 'clamp(36px, 8vw, 56px)', fontWeight: 800, lineHeight: 0.95, letterSpacing: '-0.02em' }}>
             {mode === 'login' ? <>{t('authHeadingLogin')}</> : <>{t('authHeadingSignup')}</>}
@@ -413,7 +445,7 @@ const AuthPage = ({ setRoute }) => {
             {mode === 'login' ? t('authSubLogin') : t('authSubSignup')}
           </p>
 
-          {/* OAuth buttons */}
+          {}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 28 }}>
             <button className="btn btn-ghost" style={{ padding: '14px 18px', fontSize: 12, justifyContent: 'center' }}>
               <Icon name="discord" size={16} /> DISCORD

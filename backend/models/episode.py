@@ -1,6 +1,5 @@
 from ..database import db
 
-
 class Episode(db.Model):
     __tablename__ = 'episodes'
 
@@ -19,7 +18,6 @@ class Episode(db.Model):
     thumbnail_url  = db.Column(db.String(500))
     is_filler      = db.Column(db.Boolean, default=False)
 
-    # Relationship
     anime = db.relationship('Anime', back_populates='episodes')
 
     __table_args__ = (

@@ -12,7 +12,6 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
 EMAIL_RE = re.compile(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
 
-# Повертаємо i18n-ключ замість тексту — фронтенд перекладає через t()
 def _validate_register(data: dict) -> str | None:
     email    = (data.get('email') or '').strip().lower()
     username = (data.get('username') or '').strip()
@@ -31,9 +30,6 @@ def _validate_register(data: dict) -> str | None:
     if len(password) < 8:
         return 'authErrPassShort'
     return None
-
-
-# ── Register ─────────────────────────────────────────────────────────────────
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
@@ -56,17 +52,14 @@ def register():
     db.session.add(user)
     db.session.commit()
 
-    access  = create_access_token(identity=user.id)
-    refresh = create_refresh_token(identity=user.id)
+    access  = create_access_token(identity=str(user.id))
+    refresh = create_refresh_token(identity=str(user.id))
 
     return jsonify({
         'user':          user.to_dict(),
         'access_token':  access,
         'refresh_token': refresh,
     }), 201
-
-
-# ── Login ─────────────────────────────────────────────────────────────────────
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
@@ -84,8 +77,8 @@ def login():
     user.last_login = datetime.utcnow()
     db.session.commit()
 
-    access  = create_access_token(identity=user.id)
-    refresh = create_refresh_token(identity=user.id)
+    access  = create_access_token(identity=str(user.id))
+    refresh = create_refresh_token(identity=str(user.id))
 
     return jsonify({
         'user':          user.to_dict(),
@@ -93,18 +86,12 @@ def login():
         'refresh_token': refresh,
     })
 
-
-# ── Refresh token ─────────────────────────────────────────────────────────────
-
 @auth_bp.route('/refresh', methods=['POST'])
 @jwt_required(refresh=True)
 def refresh():
     user_id = get_jwt_identity()
-    access  = create_access_token(identity=user_id)
+    access  = create_access_token(identity=str(user_id))
     return jsonify({'access_token': access})
-
-
-# ── Me ────────────────────────────────────────────────────────────────────────
 
 @auth_bp.route('/me', methods=['GET'])
 @jwt_required()
@@ -113,9 +100,6 @@ def me():
     if not user:
         return jsonify({'error_key': 'authErrNotFound'}), 404
     return jsonify(user.to_dict())
-
-
-# ── Logout ────────────────────────────────────────────────────────────────────
 
 @auth_bp.route('/logout', methods=['POST'])
 @jwt_required(optional=True)

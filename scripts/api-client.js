@@ -1,7 +1,3 @@
-// ============================================================
-// ANIMEMIX — API client
-// ============================================================
-
 const API_BASE = '/api';
 
 async function apiFetch(path, params = {}) {
@@ -34,22 +30,24 @@ async function loadInitialData() {
       AnimeMixAPI.getYears(),
     ]);
 
-    // Genre maps for display
     const mapUk = {}, mapEn = {};
     genresUk.forEach(g => { mapUk[g.slug] = g.name; });
     genresEn.forEach(g => { mapEn[g.slug] = g.name; });
 
-    // Plain objects — title_uk, title_en etc. are already in the API response
-    // Components use animeTitle(a) / animeSynopsis(a) / animeSeason(a) helpers
     const normalize = (a) => ({
       ...a,
-      genres:    (a.genres || []).map(slug => mapUk[slug] || slug),  // UK names for catalog filtering
+      genres:    (a.genres || []).map(slug => mapUk[slug] || slug),
       genresEn:  (a.genres || []).map(slug => mapEn[slug] || slug),
       genreSlugs: a.genres || [],
     });
 
     window.ANIME    = animeRes.data.map(normalize);
     window.CONTINUE = continueRes.map(normalize);
+    if (window.AuthClient && window.AuthClient.isLoggedIn()) {
+      window.LibraryClient && window.LibraryClient.getContinueWatching()
+        .then(list => { if (list && list.length) window.CONTINUE = list.map(normalize); })
+        .catch(() => {});
+    }
     window.GENRES_UK   = genresUk.map(g => g.name);
     window.GENRES_EN   = genresEn.map(g => g.name);
     window.GENRE_SLUGS = genresUk.map((g, i) => ({ slug: g.slug, name_uk: g.name, name_en: genresEn[i]?.name || g.name }));
@@ -73,8 +71,6 @@ async function loadInitialData() {
 
 loadInitialData();
 
-// При зміні мови — просто тригеримо ре-рендер.
-// Компоненти самі читають потрібне поле через animeTitle/animeSynopsis/animeSeason.
 window.addEventListener('langchange', () => {
   window.dispatchEvent(new CustomEvent('animemix-data-ready'));
 });

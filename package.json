@@ -5,7 +5,12 @@
   "main": "index.js",
   "scripts": {
     "build": "node build.mjs",
-    "dev": "node build.mjs && source venv/bin/activate && python server.py"
+    "dev": "node build.mjs && source venv/bin/activate && python server.py",
+    "db:migrate": "source venv/bin/activate && flask --app server db migrate",
+    "db:upgrade": "source venv/bin/activate && flask --app server db upgrade",
+    "db:downgrade": "source venv/bin/activate && flask --app server db downgrade",
+    "db:history": "source venv/bin/activate && flask --app server db history",
+    "db:seed": "source venv/bin/activate && python -m backend.seed"
   },
   "keywords": [],
   "author": "",

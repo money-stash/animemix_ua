@@ -2,7 +2,6 @@ import bcrypt
 from datetime import datetime
 from ..database import db
 
-
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -15,14 +14,12 @@ class User(db.Model):
     avatar_url   = db.Column(db.String(500))
     bio          = db.Column(db.Text)
 
-    # OAuth — підготовка для Discord / Telegram
     discord_id   = db.Column(db.String(100), unique=True, nullable=True)
     telegram_id  = db.Column(db.String(100), unique=True, nullable=True)
 
     created_at   = db.Column(db.DateTime, default=datetime.utcnow)
     last_login   = db.Column(db.DateTime)
 
-    # ── Password helpers ────────────────────────────────────────────────────
     def set_password(self, plain: str):
         self.password_hash = bcrypt.hashpw(
             plain.encode('utf-8'),
@@ -35,7 +32,6 @@ class User(db.Model):
             self.password_hash.encode('utf-8'),
         )
 
-    # ── Serialisation ───────────────────────────────────────────────────────
     def to_dict(self):
         return {
             'id':          self.id,

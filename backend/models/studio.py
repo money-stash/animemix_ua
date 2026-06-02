@@ -1,6 +1,5 @@
 from ..database import db
 
-
 class Studio(db.Model):
     __tablename__ = 'studios'
 

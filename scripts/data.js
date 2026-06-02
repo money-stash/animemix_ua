@@ -1,7 +1,3 @@
-// ============================================================
-// ANIMEMIX — anime catalog (mock data)
-// ============================================================
-
 const ANIME = [
   {
     id: 'frieren',
@@ -197,7 +193,6 @@ const ANIME = [
   },
 ];
 
-// continue-watching slice (with progress)
 const CONTINUE = [
   { id: 'solo-leveling', episode: 14, total: 25, progress: 0.62, time: '14:22 / 23:50' },
   { id: 'dandadan', episode: 7, total: 12, progress: 0.15, time: '03:40 / 24:10' },
@@ -213,7 +208,6 @@ const GENRES = [
 
 const YEARS = [2026, 2025, 2024, 2023, 2022, 2021, 2020];
 
-// helpers
 function getAnime(id) { return ANIME.find(a => a.id === id) || ANIME[0]; }
 
 window.ANIME = ANIME;

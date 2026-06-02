@@ -5,14 +5,8 @@ from ..models import Anime, Genre, Studio, Badge, Episode
 
 api_bp = Blueprint('api', __name__, url_prefix='/api')
 
-
-# ── Helpers ───────────────────────────────────────────────────────────────────
-
 def lang_param():
     return request.args.get('lang', 'uk')
-
-
-# ── Anime list ────────────────────────────────────────────────────────────────
 
 @api_bp.route('/anime')
 def get_anime():
@@ -20,10 +14,10 @@ def get_anime():
     genre_slug  = request.args.get('genre')
     status      = request.args.get('status')
     year        = request.args.get('year', type=int)
-    sort        = request.args.get('sort', 'rating')   # rating | year | name | hot
+    sort        = request.args.get('sort', 'rating')
     page        = request.args.get('page', 1, type=int)
     limit       = request.args.get('limit', 20, type=int)
-    limit       = min(limit, 100)  # cap
+    limit       = min(limit, 100)
 
     q = Anime.query
 
@@ -38,7 +32,7 @@ def get_anime():
         q = q.order_by(Anime.year.desc(), Anime.rating.desc())
     elif sort == 'name':
         q = q.order_by(Anime.title_uk if lang == 'uk' else Anime.title_en)
-    else:  # rating / hot
+    else:
         q = q.order_by(Anime.rating.desc())
 
     total      = q.count()
@@ -52,17 +46,11 @@ def get_anime():
         'pages': (total + limit - 1) // limit,
     })
 
-
-# ── Single anime ──────────────────────────────────────────────────────────────
-
 @api_bp.route('/anime/<slug>')
 def get_anime_detail(slug):
     lang  = lang_param()
     anime = Anime.query.filter_by(slug=slug).first_or_404()
     return jsonify(anime.to_dict(lang, include_episodes=True))
-
-
-# ── Episodes for an anime ─────────────────────────────────────────────────────
 
 @api_bp.route('/anime/<slug>/episodes')
 def get_episodes(slug):
@@ -74,17 +62,11 @@ def get_episodes(slug):
         q = q.filter_by(season_number=season)
     return jsonify([e.to_dict(lang) for e in q.all()])
 
-
-# ── Genres ────────────────────────────────────────────────────────────────────
-
 @api_bp.route('/genres')
 def get_genres():
     lang   = lang_param()
     genres = Genre.query.order_by(Genre.name_uk).all()
     return jsonify([g.to_dict(lang) for g in genres])
-
-
-# ── Search ────────────────────────────────────────────────────────────────────
 
 @api_bp.route('/search')
 def search():
@@ -104,9 +86,6 @@ def search():
     ).order_by(Anime.rating.desc()).limit(limit).all()
 
     return jsonify([a.to_dict(lang) for a in results])
-
-
-# ── Continue watching (mock — will be per-user after auth) ───────────────────
 
 CONTINUE_MOCK = [
     {'slug': 'solo-leveling', 'episode': 14, 'total': 25, 'progress': 0.62, 'time': '14:22 / 23:50'},
@@ -132,25 +111,16 @@ def continue_watching():
             result.append(d)
     return jsonify(result)
 
-
-# ── Years ─────────────────────────────────────────────────────────────────────
-
 @api_bp.route('/years')
 def get_years():
     rows  = db.session.query(Anime.year).distinct().order_by(Anime.year.desc()).all()
     years = [r[0] for r in rows if r[0]]
     return jsonify(years)
 
-
-# ── Studios ───────────────────────────────────────────────────────────────────
-
 @api_bp.route('/studios')
 def get_studios():
     studios = Studio.query.order_by(Studio.name).all()
     return jsonify([s.to_dict() for s in studios])
-
-
-# ── Health check ──────────────────────────────────────────────────────────────
 
 @api_bp.route('/health')
 def health():

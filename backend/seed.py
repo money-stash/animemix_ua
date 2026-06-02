@@ -1,7 +1,3 @@
-"""
-Seed the database with initial data.
-Run: python -m backend.seed
-"""
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
@@ -11,7 +7,6 @@ from backend.models import Studio, Genre, Badge, Anime, Episode
 
 app = create_app()
 
-# ── Genre map: UK name → (slug, EN name) ────────────────────────────────────
 GENRE_MAP = {
     'Екшн':         ('action',       'Action'),
     'Пригоди':      ('adventure',    'Adventure'),
@@ -37,7 +32,6 @@ GENRE_MAP = {
     'Історичне':    ('historical',   'Historical'),
 }
 
-# ── Season map: UK → EN ───────────────────────────────────────────────────────
 SEASON_EN = {
     'Зима 2026':  'Winter 2026',
     'Зима 2025':  'Winter 2025',
@@ -52,7 +46,6 @@ SEASON_EN = {
     'Осінь 2022': 'Autumn 2022',
 }
 
-# ── Raw anime data (mirrors data.js) ─────────────────────────────────────────
 ANIME_DATA = [
     {
         'slug': 'frieren',
@@ -222,7 +215,6 @@ ANIME_DATA = [
         'synopsis_en': 'In a world where nearly everyone has superpowers, a boy born without any dreams of becoming the greatest hero.',
         'badges': ['dub'], 'runtime': '24 min', 'season_uk': 'Літо 2024',
     },
-    # ── Додаткові тайтли ──────────────────────────────────────────────────────
     {
         'slug': 'blue-lock',
         'title_uk': 'Блакитна в\'язниця',
@@ -561,7 +553,6 @@ ANIME_DATA = [
     },
 ]
 
-# ── Episode seed data (Solo Leveling S2) ─────────────────────────────────────
 SOLO_EPISODES = [
     (1, 'Пробудження',         'Awakening',         'Сон-у прокидається після смертельного підземелля.', 'Sung Jin-Woo awakens after a near-death dungeon.'),
     (2, 'Іспит',               'The Test',           'Таємнича система дає перший квест.', 'The mysterious system issues its first quest.'),
@@ -575,13 +566,11 @@ SOLO_EPISODES = [
     (10,'Тіньовий монарх',     'Shadow Monarch',     'Справжня сила системи починає проявлятись.', 'The true power of the system begins to manifest.'),
 ]
 
-
 def seed():
     with app.app_context():
         db.create_all()
         print('Tables created.')
 
-        # ── Studios ───────────────────────────────────────────────────────────
         studio_names = {d['studio'] for d in ANIME_DATA}
         studio_map   = {}
         for name in studio_names:
@@ -593,8 +582,7 @@ def seed():
             studio_map[name] = s
         db.session.flush()
 
-        # ── Genres ────────────────────────────────────────────────────────────
-        genre_map = {}  # UK name → Genre
+        genre_map = {}
         for uk_name, (slug, en_name) in GENRE_MAP.items():
             g = Genre.query.filter_by(slug=slug).first()
             if not g:
@@ -603,7 +591,6 @@ def seed():
             genre_map[uk_name] = g
         db.session.flush()
 
-        # ── Badges ────────────────────────────────────────────────────────────
         badge_map = {}
         for slug in ['hot', 'new', 'dub', 'simulcast']:
             b = Badge.query.filter_by(slug=slug).first()
@@ -613,7 +600,6 @@ def seed():
             badge_map[slug] = b
         db.session.flush()
 
-        # ── Anime ─────────────────────────────────────────────────────────────
         for d in ANIME_DATA:
             a = Anime.query.filter_by(slug=d['slug']).first()
             if not a:
@@ -642,7 +628,6 @@ def seed():
 
         db.session.flush()
 
-        # ── Episodes (Solo Leveling sample) ───────────────────────────────────
         solo = Anime.query.filter_by(slug='solo-leveling').first()
         if solo and solo.episodes.count() == 0:
             for num, title_uk, title_en, desc_uk, desc_en in SOLO_EPISODES:
@@ -660,7 +645,6 @@ def seed():
 
         db.session.commit()
         print(f'Seeded {len(ANIME_DATA)} anime, {len(GENRE_MAP)} genres, {len(studio_names)} studios.')
-
 
 if __name__ == '__main__':
     seed()

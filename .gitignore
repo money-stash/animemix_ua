@@ -17,3 +17,8 @@ dist/
 # IDE
 .vscode/
 .idea/
+
+# Database file — use migrations + seed instead
+*.db
+*.db-shm
+*.db-wal

@@ -1,7 +1,3 @@
-// ============================================================
-// ANIMEMIX — i18n (uk / en)
-// ============================================================
-
 const I18N = {
   uk: {
     tweakSectionColors: "Кольори", tweakLabelPalette: "Палітра", tweakSectionGlass: "Скло",
@@ -38,15 +34,15 @@ const I18N = {
     statTitles: "ТАЙТЛІВ", statEpisodes: "ЕПІЗОДІВ", statSimulcast: "СИМУЛКАСТ", statQuality: "ЯКІСТЬ",
     continueWatchingLabel: "Дивитись далі", continueHistoryAll: "ВСЯ ІСТОРІЯ →", continueEpProgress: "ЕП",
     featuredPremiere: "▶ ПРЕМ'ЄРА · СЕЗОН 2", featuredBtnWatch: "Дивитись еп. 1", featuredBtnDetails: "Детальніше",
-    trendingKicker: "ТОП ЦЬОГО ТИЖНЯ // TRENDING #001", trendingTitle: "Зараз дивляться всі", trendingActionAll: "Весь топ",
-    genresKicker: "ЖАНРИ // GENRE-INDEX", genresTitle: "Що ти любиш?", genresActionAll: "Усі жанри", genreTitleCount: "ТАЙТЛІВ",
+    trendingKicker: "ТОП ЦЬОГО ТИЖНЯ // TRENDING #001",
+    genresKicker: "ЖАНРИ // GENRE-INDEX",
     genreDarkFantasy: "Темне фентезі", genreRomance: "Романтика", genreAction: "Екшн",
     genreIsekai: "Ісекай", genrePsychology: "Психологія", genreMecha: "Меха",
-    newSeasonKicker: "СИМУЛКАСТ // SEASON-2026-WINTER", newSeasonTitle: "Новинки сезону", newSeasonAction: "Розклад",
-    editorsPicksKicker: "ВИБІР РЕДАКЦІЇ // CURATED", editorsPicksTitle: "Те, що варто подивитись",
-    libraryKicker: "БІБЛІОТЕКА // ALL TITLES", libraryTitle: "Каталог", libraryAction: "Всі 3847 тайтлів",
+    newSeasonKicker: "СИМУЛКАСТ // SEASON-2026-WINTER",
+    editorsPicksKicker: "ВИБІР РЕДАКЦІЇ // CURATED",
+    libraryKicker: "БІБЛІОТЕКА // ALL TITLES",
     hotGridLabel: "// HOT-06 // ОБРАНЕ РЕДАКЦІЇ",
-    catalogHeader: "// КАТАЛОГ // 3,847 ТАЙТЛІВ", catalogHeading: "Все аніме.",
+    catalogHeader: "// КАТАЛОГ // 3,847 ТАЙТЛІВ",
     filtersBtnMobile: "Фільтри", filterGroupGenres: "ЖАНРИ", filterGroupStatus: "СТАТУС",
     filterStatusAll: "Всі", filterStatusAiring: "Виходить", filterStatusCompleted: "Завершено",
     filterGroupYear: "РІК", filterYearAll: "УСІ", filterGroupDuration: "ТРИВАЛІСТЬ",
@@ -116,7 +112,7 @@ const I18N = {
     profileTabAchievements: "Досягнення",
     libraryGroupWatching: "Зараз дивлюсь", libraryGroupCompleted: "Завершено",
     libraryGroupPlan: "Заплановано", libraryGroupFavorites: "Улюблене",
-    activitySectionLabel: "// АКТИВНІСТЬ", activityWatchedEp: "Подивилась еп 14",
+    activitySectionLabel: "// АКТИВНІСТЬ",
     activityRated: "Оцінила 9/10", activityReviewed: "Залишила відгук",
     activityAddedToList: "Додала у список", activityCompleted: "Завершила",
     friendsWatchingLabel: "// ДРУЗІ ДИВЛЯТЬСЯ", statsWeekLabel: "// ЦЬОГО ТИЖНЯ",
@@ -189,15 +185,15 @@ const I18N = {
     statTitles: "TITLES", statEpisodes: "EPISODES", statSimulcast: "SIMULCAST", statQuality: "QUALITY",
     continueWatchingLabel: "Continue watching", continueHistoryAll: "FULL HISTORY →", continueEpProgress: "EP",
     featuredPremiere: "▶ PREMIERE · SEASON 2", featuredBtnWatch: "Watch ep. 1", featuredBtnDetails: "More details",
-    trendingKicker: "TOP THIS WEEK // TRENDING #001", trendingTitle: "Everyone's watching now", trendingActionAll: "Full top",
-    genresKicker: "GENRES // GENRE-INDEX", genresTitle: "What do you like?", genresActionAll: "All genres", genreTitleCount: "TITLES",
+    trendingKicker: "TOP THIS WEEK // TRENDING #001",
+    genresKicker: "GENRES // GENRE-INDEX",
     genreDarkFantasy: "Dark fantasy", genreRomance: "Romance", genreAction: "Action",
     genreIsekai: "Isekai", genrePsychology: "Psychological", genreMecha: "Mecha",
-    newSeasonKicker: "SIMULCAST // SEASON-2026-WINTER", newSeasonTitle: "New this season", newSeasonAction: "Schedule",
-    editorsPicksKicker: "EDITORS' PICKS // CURATED", editorsPicksTitle: "Worth watching",
-    libraryKicker: "LIBRARY // ALL TITLES", libraryTitle: "Catalog", libraryAction: "All 3847 titles",
-    hotGridLabel: "// HOT-06 // EDITORS' PICKS",
-    catalogHeader: "// CATALOG // 3,847 TITLES", catalogHeading: "All anime.",
+    newSeasonKicker: "SIMULCAST // SEASON-2026-WINTER",
+    editorsPicksKicker: "EDITORS' PICKS // CURATED",
+    libraryKicker: "LIBRARY // ALL TITLES",
+    hotGridLabel: "// HOT-06 // ОБРАНЕ РЕДАКЦІЇ",
+    catalogHeader: "// КАТАЛОГ // 3,847 ТАЙТЛІВ",
     filtersBtnMobile: "Filters", filterGroupGenres: "GENRES", filterGroupStatus: "STATUS",
     filterStatusAll: "All", filterStatusAiring: "Airing", filterStatusCompleted: "Completed",
     filterGroupYear: "YEAR", filterYearAll: "ALL", filterGroupDuration: "DURATION",
@@ -267,7 +263,7 @@ const I18N = {
     profileTabAchievements: "Achievements",
     libraryGroupWatching: "Currently watching", libraryGroupCompleted: "Completed",
     libraryGroupPlan: "Planned", libraryGroupFavorites: "Favorites",
-    activitySectionLabel: "// ACTIVITY", activityWatchedEp: "Watched ep 14",
+    activitySectionLabel: "// АКТИВНІСТЬ",
     activityRated: "Rated 9/10", activityReviewed: "Left a review",
     activityAddedToList: "Added to list", activityCompleted: "Completed",
     friendsWatchingLabel: "// FRIENDS WATCHING", statsWeekLabel: "// THIS WEEK",
@@ -323,12 +319,7 @@ window.getLang = function() {
   return window.__lang;
 };
 
-// ── Anime field helpers ───────────────────────────────────────────────────────
-// Прості функції без геттерів — просто читають потрібне поле на момент рендеру.
-// Компоненти що мають useLang() ре-рендеряться на langchange → отримують нові значення.
-// Підтримуємо обидва формати: snake_case (API) і camelCase (legacy data.js)
-// Lookup maps — заповнюються після завантаження даних з API
-window.__animeEnMap = {}; // slug → { title_en, synopsis_en, season_en }
+window.__animeEnMap = {};
 window.addEventListener('animemix-data-ready', () => {
   (window.ANIME || []).forEach(a => {
     const key = a.id || a.slug;
@@ -361,8 +352,6 @@ window.animeSeason = function(a) {
   }
   return a.season_uk || a.season || '';
 };
-// Genres array in current language
-// Genre slug → EN name map (built after data loads)
 window.__genreSlugToEn = {};
 window.addEventListener('animemix-data-ready', () => {
   if (window.GENRE_SLUGS) window.GENRE_SLUGS.forEach(g => { window.__genreSlugToEn[g.slug] = g.name_en; });
@@ -370,9 +359,7 @@ window.addEventListener('animemix-data-ready', () => {
 window.animeGenres = function(a) {
   if (!a) return [];
   if (window.__lang === 'en') {
-    // 1. Pre-built EN array
     if (a.genresEn && a.genresEn.length) return a.genresEn;
-    // 2. Translate UK names via slug map
     if (a.genres && a.genres.length && window.GENRE_SLUGS) {
       return a.genres.map(uk => {
         const match = window.GENRE_SLUGS.find(g => g.name_uk === uk);
