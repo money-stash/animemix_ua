@@ -1,12 +1,16 @@
 import os
-from flask import Flask, send_from_directory
+
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
+from flask import Flask, send_from_directory
+
+from backend.database import init_db
+from backend.config import config_map
 
 
 def create_app(env=None):
     app = Flask(__name__, static_folder='.')
 
-    from backend.config import config_map
     cfg_key = env or os.environ.get('FLASK_ENV', 'default')
     app.config.from_object(config_map[cfg_key])
 
@@ -15,11 +19,10 @@ def create_app(env=None):
     app.config['JWT_ACCESS_TOKEN_EXPIRES']   = dt.timedelta(minutes=30)
     app.config['JWT_REFRESH_TOKEN_EXPIRES']  = dt.timedelta(days=30)
 
-    from flask_jwt_extended import JWTManager
     JWTManager(app)
 
     CORS(app)
-    from backend.database import init_db
+    
     init_db(app)
 
     from backend.api import api_bp, auth_bp, library_bp
