@@ -2,6 +2,7 @@ import os
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 
+
 def create_app(env=None):
     app = Flask(__name__, static_folder='.')
 
